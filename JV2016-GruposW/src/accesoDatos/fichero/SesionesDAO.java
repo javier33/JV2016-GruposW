@@ -5,8 +5,8 @@
  * Colabora en el patron Fachada.
  * @since: prototipo2.0
  * @source: SesionesDAO.java 
- * @version: 2.1 - 2017.04.09 
- * @author: ajp
+ * @version: 2.1 - 2017.05.11 
+ * @author: Alejandro, Judiht, Pedro, Ramón, Jose Maria
  */
 
 package accesoDatos.fichero;
@@ -272,7 +272,7 @@ public class SesionesDAO implements OperacionesDAO, Persistente {
 	 */
 	@Override
 	public void borrarTodo() {
-		instancia = null;	
+		datosSimulaciones = new ArrayList<Simulacion>();	
 	}
 
 }//class
