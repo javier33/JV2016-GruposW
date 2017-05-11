@@ -1,14 +1,14 @@
+package accesoDatos.memoria;
 /** 
  * Proyecto: Juego de la vida.
  *  Resuelve todos los aspectos del almacenamiento del DTO Simulacion utilizando un ArrayList.
  *  Colabora en el patron Fachada.
  *  @since: prototipo2.0
  *  @source: SimulacionesDAO.java 
- *  @version: 2.1 - 2017/04/03 
- *  @author: ajp
+ *  @version: 2.1 - 2017/05/11
+ *  @author: Ramón, Jose Maria, Alejandro, Collados, Judith
  */
 
-package accesoDatos.memoria;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -236,7 +236,6 @@ public class SimulacionesDAO implements OperacionesDAO {
 	 */
 	@Override
 	public void borrarTodo() {
-		instancia = null;
-	}
+		datosSimulaciones = new ArrayList<Simulacion>();	}
 
 } //class
