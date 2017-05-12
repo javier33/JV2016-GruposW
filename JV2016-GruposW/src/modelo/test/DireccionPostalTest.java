@@ -1,3 +1,10 @@
+/** 
+ * Proyecto: Juego de la vida.
+ * Clase JUnit de prueba automatizada de las características de la clase DireccionPostal.
+ * @source: DireccionPostal.java 
+ * @version: 1 - 2017.05.12
+ * @author: Daniel Abellán Segorbe
+ */
 package modelo.test;
 
 import static org.junit.Assert.assertEquals;
@@ -38,6 +45,7 @@ public class DireccionPostalTest {
 		d2 = null;
 	}
 
+	@Test
 	public void testGetCalle() {
 		assertEquals(d2.getCalle(), "Flan");
 	}
@@ -49,6 +57,7 @@ public class DireccionPostalTest {
 		assertTrue(d1 != null);
 	}
 
+	@Test
 	public void testGetNumero() {
 		assertEquals(d2.getNumero(), "21");
 	}
@@ -60,6 +69,7 @@ public class DireccionPostalTest {
 		assertTrue(d1 != null);
 	}
 
+	@Test
 	public void testGetCodigoPostal() {
 		assertEquals(d2.getCodigoPostal(), "88888");
 	}
@@ -71,6 +81,7 @@ public class DireccionPostalTest {
 		assertTrue(d1 != null);
 	}
 
+	@Test
 	public void testGetPoblacion() {
 		assertEquals(d2.getPoblacion(), "Murcia");
 	}
