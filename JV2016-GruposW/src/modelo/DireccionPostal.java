@@ -143,7 +143,7 @@ public class DireccionPostal implements Serializable, Cloneable {
 	}
 
 	public String getCodigoPostal() {
-		return calle;
+		return cp;
 	}
 
 	public String getCalle() {
