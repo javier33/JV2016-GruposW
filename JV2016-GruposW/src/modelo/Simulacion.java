@@ -61,7 +61,7 @@ public class Simulacion implements Serializable, Cloneable {
 	 * @throws ModeloException 
 	 */
 	public Simulacion(Simulacion s) throws ModeloException {
-		this(s.usr, new Fecha(s.fecha), new Mundo(s.mundo), s.estado);
+		this(s.usr, s.fecha, s.mundo, s.estado);
 	}
 
 	public Usuario getUsr() {
@@ -81,12 +81,11 @@ public class Simulacion implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Obtiene idSimulacion concatenando idUsr + un número como texto.
+	 * Obtiene idSimulacion concatenando idUsr + la marca de tiempo como texto.
 	 * @return el id único generado.
 	 */
 	public String getIdSimulacion() {
-		return	usr.getIdUsr() + ":" + fecha.getAño() + fecha.getMes() + fecha.getDia() 
-								+ fecha.getHora() + fecha.getMinuto() + fecha.getSegundo();
+		return	usr.getIdUsr() + ":" + fecha.toTexto();
 	}
 
 	public void setUsr(Usuario usr) {
@@ -184,9 +183,9 @@ public class Simulacion implements Serializable, Cloneable {
 	 * @return el objeto clonado.
 	*/
 	@Override
-	public Object clone() {
+	public Simulacion clone() {
 		// Utiliza el constructor copia.
-		Object clon = null;
+		Simulacion clon = null;
 		try {
 			clon = new Simulacion(this);
 		} catch (ModeloException e) { }

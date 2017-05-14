@@ -21,6 +21,7 @@ import util.Formato;
 
 public class Mundo implements Leyes, Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
+	private static int sizePredeterminado = new Integer(Configuracion.get().getProperty("mundo.sizePredeterminado"));
 	private String nombre;
 	private List<Integer> constantes;
 	private Map<Patron, Posicion> distribucion;
@@ -46,13 +47,7 @@ public class Mundo implements Leyes, Serializable, Cloneable {
 			setEspacio(espacio);
 		} 
 		catch (ModeloException e) {
-			int tamaño = new Integer(Configuracion.get().getProperty("mundo.sizePredeterminado"));
-			this.espacio = new byte[tamaño][tamaño];
-			for (int i=0; i < this.espacio.length; i++) {
-				for (int j=0; j < this.espacio.length; j++) {
-					this.espacio[i][j] = 0; 
-				}
-			}
+			this.espacio = new byte[sizePredeterminado][sizePredeterminado];
 		}
 	}
 
@@ -63,8 +58,8 @@ public class Mundo implements Leyes, Serializable, Cloneable {
 	 * @throws ModeloException 
 	 */
 	public Mundo() throws ModeloException {
-		this("MundoDefecto", new ArrayList<Integer>(), 
-				new Hashtable<Patron, Posicion>(), null);
+		this("MundoDefecto", new ArrayList<Integer>(), new Hashtable<Patron, Posicion>(), 
+				new byte[sizePredeterminado][sizePredeterminado]);
 	}
 
 	/**
@@ -74,18 +69,18 @@ public class Mundo implements Leyes, Serializable, Cloneable {
 	 * Llama al constructor convencional utilizando objetos obtenidos
 	 * con los contructores copia de los atributos.
 	 * El atributo espacio es clonado utilizando utilidades de clonación de arrays.
-	 * @param m - ea Mundo a clonar
+	 * @param mundo - el Mundo a clonar
 	 * @throws ModeloException 
 	 */
-	public Mundo(Mundo m) throws ModeloException {
-		this(m.nombre, new ArrayList<Integer>(m.constantes), 
-				new Hashtable<Patron,Posicion>(m.distribucion), m.espacio);
+	public Mundo(Mundo mundo) throws ModeloException {
+		this(mundo.nombre, new ArrayList<Integer>(mundo.constantes), 
+				new Hashtable<Patron,Posicion>(mundo.distribucion), 
+				new byte[mundo.espacio.length][mundo.espacio.length]);
 
-		this.espacio = new byte[m.espacio.length][m.espacio.length];
-
-		for (int i=0; i <m.espacio.length; i++)
-			this.espacio[i] = Arrays.copyOf(m.espacio[i], m.espacio[i].length);
-		//System.arraycopy(m.espacio[i], 0, this.espacio[i], 0, m.espacio[i].length);	
+		for (int i=0; i <mundo.espacio.length; i++) {
+			this.espacio[i] = Arrays.copyOf(mundo.espacio[i], mundo.espacio[i].length);
+			//System.arraycopy(mundo.espacio[i], 0, this.espacio[i], 0, mundo.espacio[i].length);
+		}
 	}
 
 	public String getNombre() {
@@ -99,7 +94,6 @@ public class Mundo implements Leyes, Serializable, Cloneable {
 	public Map<Patron, Posicion> getDistribucion() {
 		return distribucion;
 	}
-
 
 	public byte[][] getEspacio() {
 		return espacio;
@@ -120,18 +114,7 @@ public class Mundo implements Leyes, Serializable, Cloneable {
 	 */
 	private boolean nombreValido(String nombre) {
 		assert nombre != null;
-		return	nombre.matches(Formato.PATRON_NOMBRE_MUNDO_JV) && nombreNoRepetido(nombre);
-	}
-
-	/**
-	 * Comprueba que el nombre es único.
-	 * @param nombre.
-	 * @return true si cumple.
-	 */
-	private boolean nombreNoRepetido(String nombre) {
-		// Comprueba que nombre no está repetido buscándolo en el almacen de datos.
-		// --Pendiente--
-		return true;
+		return	nombre.matches(Formato.PATRON_NOMBRE_MUNDO_JV);
 	}
 
 	public void setConstantes(List<Integer> constantes) throws ModeloException {
@@ -191,7 +174,6 @@ public class Mundo implements Leyes, Serializable, Cloneable {
 		}
 		return false;
 	}
-
 
 	//Métodos de la interface Leyes
 	/**
@@ -275,7 +257,7 @@ public class Mundo implements Leyes, Serializable, Cloneable {
 			if (nombre.equals(((Mundo)obj).nombre) &&
 					constantes.equals(((Mundo)obj).constantes) &&
 					distribucion.equals(((Mundo)obj).distribucion) &&
-					espacio.equals(((Mundo)obj).espacio) 
+					equalsEspacios(((Mundo)obj).espacio) 
 					) {
 				return true;
 			}
@@ -283,6 +265,20 @@ public class Mundo implements Leyes, Serializable, Cloneable {
 		return false;
 	}
 
+	/**
+	 * Comprueba si el espacio recibido como parámetro es igual al
+	 * atributo espacio.
+	 * @return falso si no cumple las condiciones.
+	 */
+	private boolean equalsEspacios(byte[][] espacio ) {	
+		for (int i = 0; i < this.espacio.length; i++) {
+			if (!Arrays.equals(this.espacio[i], espacio[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	/**
 	 * Genera un clon del propio objeto realizando una copia profunda.
 	 * @return el objeto clonado.

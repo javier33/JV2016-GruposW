@@ -1,13 +1,20 @@
 /** 
- * Proyecto: Juego de la vida.
- * Clase JUnit de prueba automatizada de las características de la clase Fecha según el modelo 2.
- * @since: prototipo2
- * @source: TestFecha.java 
- * @version: 2.0 - 2017/03/23
- * @author: ajp
+ *  Proyecto: Juego de la vida.
+ *  Clase JUnit de prueba automatizada de las características de la clase Fecha según el modelo 2.
+ *  @since: prototipo2
+ *  @source: TestFecha.java 
+ *  @version: 2.0 - 2017/03/23
+ *  @author: ajp
  */
 
 package util.test;
+/** Clase JUnit de prueba automatizada de las características
+ *  de la clase Fecha según el modelo 2.
+ *  @since: prototipo2
+ *  @source: TestFecha.java 
+ *  @version: 2.0 - 2017/03/23
+ *  @author: ajp
+ */
 
 import static org.junit.Assert.*;
 
@@ -24,7 +31,7 @@ public class FechaTest {
 	private Fecha fecha1; 
 	private Fecha fecha2 = new Fecha(2000, 02, 20);
 	private Fecha fecha3 = new Fecha(2000, 02, 20, 15, 10, 5);
-
+	
 	/**
 	 * Método que se ejecuta antes de cada @Test para preparar datos de prueba.
 	 */
@@ -33,14 +40,14 @@ public class FechaTest {
 		// Objetos para la prueba.
 		fecha1 = new Fecha(); 
 	}
-
+	
 	/**
 	 * Método que se ejecuta después de cada @Test para limpiar datos de prueba.
 	 */
 	@After	
 	public void borrarDatosPrueba() {
 		fecha1 = null;
-
+		
 	}
 
 	// Test CON DATOS VALIDOS
@@ -62,7 +69,7 @@ public class FechaTest {
 		assertEquals(fecha3.getMinuto(), 10);
 		assertEquals(fecha3.getSegundo(), 5);
 	}
-
+	
 	@Test
 	public void testFechaDefecto() {
 		assertNotNull(fecha2);
@@ -93,17 +100,17 @@ public class FechaTest {
 	public void testGetHora() {
 		assertEquals(fecha3.getHora(), 15);
 	}
-
+	
 	@Test
 	public void testGetMinuto() {
 		assertEquals(fecha3.getMinuto(), 10);
 	}
-
+	
 	@Test
 	public void testGetSegundo() {
 		assertEquals(fecha3.getSegundo(), 5);
 	}
-
+	
 	@Test
 	public void testSetAño() {
 		fecha1.setAño(2000);
@@ -127,19 +134,19 @@ public class FechaTest {
 		fecha1.setHora(15);
 		assertEquals(fecha1.getHora(), 15);
 	}
-
+	
 	@Test
 	public void testSetMinuto() {
 		fecha1.setMinuto(10);
 		assertEquals(fecha1.getMinuto(), 10);
 	}
-
+	
 	@Test
 	public void testSetSegundo() {
 		fecha1.setSegundo(5);
 		assertEquals(fecha1.getSegundo(), 5);
 	}
-
+	
 	@Test
 	public void testDifSegundos() {
 		Fecha fecha = new Fecha(2000, 02, 19);

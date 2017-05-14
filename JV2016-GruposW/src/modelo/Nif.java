@@ -108,9 +108,9 @@ public class Nif implements Serializable, Cloneable {
 	 * @return el objeto clonado.
 	 */
 	@Override
-	public Object clone() {
+	public Nif clone() {
 		// Utiliza el constructor copia.
-		Object clon = null;
+		Nif clon = null;
 		try {
 			clon = new Nif(this);
 		} 

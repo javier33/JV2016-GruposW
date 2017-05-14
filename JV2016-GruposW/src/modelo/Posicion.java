@@ -154,9 +154,9 @@ public class Posicion implements Cloneable, Serializable {
 	 * @return el objeto clonado.
 	*/
 	@Override
-	public Object clone() {
+	public Posicion clone() {
 		// Utiliza el constructor copia.
-		Object clon = null;
+		Posicion clon = null;
 		try {
 			clon = new Posicion(this);
 		} 

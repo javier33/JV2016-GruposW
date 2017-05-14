@@ -43,7 +43,7 @@ public class DatosPrueba {
 		cargarSimulacionesPrueba();
 		cargarPatronesPrueba();	
 	}
-	
+
 	/**
 	 * Elimina datos de prueba y los predeterminados del almacén de datos.
 	 */
@@ -54,7 +54,7 @@ public class DatosPrueba {
 		fachada.borrarTodosMundos();
 		fachada.borrarTodosPatrones();
 	}
-	
+
 	/**
 	 * Genera datos de prueba válidos dentro 
 	 * del almacén de datos.
@@ -82,16 +82,18 @@ public class DatosPrueba {
 	private static void cargarSesionesPrueba() {
 		Usuario usrPrueba1 = fachada.obtenerUsuario("AAA0T");
 		Usuario usrPrueba2 = fachada.obtenerUsuario("III1R");
-		SesionUsuario sesionPrueba1 = null;
-		SesionUsuario sesionPrueba2 = null;
+		Fecha fechaPrueba1 = new Fecha();
+		Fecha fechaPrueba2 = new Fecha();
+		fechaPrueba2.addSegundos(1);		
 		try {
-			sesionPrueba1 = new SesionUsuario(usrPrueba1, new Fecha(), EstadoSesion.CERRADA);
-			sesionPrueba2 = new SesionUsuario(usrPrueba2, new Fecha(), EstadoSesion.CERRADA);
-			fachada.altaSesion(sesionPrueba1);
-			fachada.altaSesion(sesionPrueba2);
+			fachada.altaSesion(new SesionUsuario(usrPrueba1, fechaPrueba1, EstadoSesion.CERRADA));
+			fachada.altaSesion(new SesionUsuario(usrPrueba2, fechaPrueba1, EstadoSesion.CERRADA));
+			fachada.altaSesion(new SesionUsuario(usrPrueba1, fechaPrueba2, EstadoSesion.CERRADA));
+			fachada.altaSesion(new SesionUsuario(usrPrueba2, fechaPrueba2, EstadoSesion.CERRADA));
+
 		} 
-		catch (DatosException | ModeloException e) {
-			e.printStackTrace();
+		catch (DatosException | ModeloException e) { 
+			e.printStackTrace();		
 		}
 	}
 
@@ -102,13 +104,20 @@ public class DatosPrueba {
 	private static void cargarSimulacionesPrueba() {
 		Usuario usrPrueba = fachada.obtenerUsuario("III1R");
 		Mundo mundoPrueba = fachada.obtenerMundo("MundoDemo");
+		Fecha fechaPrueba1 = new Fecha();
+		Fecha fechaPrueba2 = new Fecha();
+		Fecha fechaPrueba3 = new Fecha();
+		fechaPrueba1.addSegundos(1);
+		fechaPrueba2.addSegundos(2);
+		fechaPrueba3.addSegundos(3);
 		try {
-			Simulacion simulacionPrueba1 = new Simulacion(usrPrueba, new Fecha(), mundoPrueba, EstadoSimulacion.PREPARADA);
-			Simulacion simulacionPrueba2 = new Simulacion(usrPrueba, new Fecha(), mundoPrueba, EstadoSimulacion.PREPARADA);
-			fachada.altaSimulacion(simulacionPrueba1);
-			fachada.altaSimulacion(simulacionPrueba2);
+			fachada.altaSimulacion(new Simulacion(usrPrueba, fechaPrueba1, mundoPrueba, EstadoSimulacion.COMPLETADA));
+			fachada.altaSimulacion(new Simulacion(usrPrueba, fechaPrueba2, mundoPrueba, EstadoSimulacion.INICIADA));
+			fachada.altaSimulacion(new Simulacion(usrPrueba, fechaPrueba3, mundoPrueba, EstadoSimulacion.PREPARADA));
 		} 
-		catch (DatosException | ModeloException e) { }
+		catch (DatosException | ModeloException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -151,14 +160,14 @@ public class DatosPrueba {
 	 * del almacén de datos.
 	 */
 	private static void cargarPatronesPrueba() {
-		byte[][] esquemaPrueba =  new byte[][]{ 
+		byte[][] esquemaPrueba =  new byte[][] { 
 			{ 0, 0, 0, 0 }, 
 			{ 1, 0, 1, 0 }, 
 			{ 1, 0, 0, 1 }, 
 			{ 1, 1, 1, 1 }, 
 			{ 1, 1, 0, 0 }
 		};
-		
+
 		try {
 			Patron patronPrueba = new Patron("PatronPrueba", esquemaPrueba);
 			fachada.altaPatron(patronPrueba);

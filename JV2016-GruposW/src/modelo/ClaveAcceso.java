@@ -27,7 +27,8 @@ public class ClaveAcceso implements Serializable, Cloneable {
 	}
 
 	public ClaveAcceso(ClaveAcceso claveAcceso) throws ModeloException {
-		this(claveAcceso.texto);
+		// No se puede delegar en el constructor convencional porque causará una doble encriptación
+		texto = new String(claveAcceso.texto);
 	}
 
 	public String getTexto() {
@@ -75,11 +76,11 @@ public class ClaveAcceso implements Serializable, Cloneable {
 	*/
 	@Override
 	public boolean equals(Object obj) {
-		if (obj != null && getClass() == obj.getClass()) {
+		if (obj != null && getClass().equals(obj.getClass())) {
 			if (this == obj) {
 				return true;
 			}
-			if (texto.equals(((ClaveAcceso) obj).texto)) {
+			if (texto.equals(((ClaveAcceso)obj).texto)) {
 				return true;
 			}
 		}
@@ -91,9 +92,9 @@ public class ClaveAcceso implements Serializable, Cloneable {
 	 * @return el objeto clonado.
 	*/
 	@Override
-	public Object clone() {
+	public ClaveAcceso clone() {
 		// Utiliza el constructor copia.
-		Object clon = null;
+		ClaveAcceso clon = null;
 		try {
 			clon = new ClaveAcceso(this);
 		} 

@@ -148,7 +148,6 @@ public class Usuario extends Persona {
 		return rol;
 	}
 
-
 	public void setRol(RolUsuario rol) {
 		assert rol != null;
 		this.rol = rol;
@@ -222,9 +221,9 @@ public class Usuario extends Persona {
 	 * @return el objeto clonado.
 	*/
 	@Override
-	public Object clone() {
+	public Usuario clone() {
 		// Utiliza el constructor copia.
-		Object clon = null;
+		Usuario clon = null;
 		try {
 			clon = new Usuario(this);
 		} catch (ModeloException e) { }

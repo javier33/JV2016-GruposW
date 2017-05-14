@@ -111,18 +111,7 @@ public class Patron implements Serializable, Cloneable {
 	 */
 	private boolean nombreValido(String nombre) {
 		assert nombre != null;
-		return	nombre.matches(Formato.PATRON_NOMBRE_PATRON_JV) && nombreNoRepetido(nombre);
-	}
-
-	/**
-	 * Comprueba que el nombre es único.
-	 * @param nombre.
-	 * @return true si cumple.
-	 */
-	private boolean nombreNoRepetido(String nombre) {
-		// Comprueba que nombre no está repetido buscándolo en el almacen de datos.
-		// --Pendiente--
-		return true;
+		return	nombre.matches(Formato.PATRON_NOMBRE_PATRON_JV);
 	}
 
 	public void setEsquema(byte[][] esquema) throws ModeloException {
@@ -181,7 +170,7 @@ public class Patron implements Serializable, Cloneable {
 				return true;
 			}
 			if (nombre.equals(((Patron)obj).nombre) &&
-					esquema.equals(((Patron)obj).esquema)
+					equalsEsquema(((Patron)obj).esquema)
 					) {
 				return true;
 			}
@@ -190,13 +179,27 @@ public class Patron implements Serializable, Cloneable {
 	}
 	
 	/**
+	 * Comprueba si el esquema recibido como parámetro es igual al
+	 * atributo esquema.
+	 * @return falso si no cumple las condiciones.
+	 */
+	private boolean equalsEsquema(byte[][] esquema ) {	
+		for (int i = 0; i < this.esquema.length; i++) {
+			if (!Arrays.equals(this.esquema[i], esquema[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
 	 * Genera un clon del propio objeto realizando una copia profunda.
 	 * @return el objeto clonado.
 	*/
 	@Override
-	public Object clone() {
+	public Patron clone() {
 		// Utiliza el constructor copia.
-		Object clon = null;
+		Patron clon = null;
 		try {
 			clon = new Patron(this);
 		} catch (ModeloException e) { }

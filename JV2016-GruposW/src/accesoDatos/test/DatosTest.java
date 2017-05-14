@@ -47,11 +47,11 @@ public class DatosTest {
 	private Simulacion simulacionPrueba;
 	private Mundo mundoPrueba;
 	private Patron patronPrueba;
-	
+
 	public DatosTest () {
 		fachada = new Datos();
 	}
-	
+
 	@Before
 	public void crearDatosPrueba() {
 		try {
@@ -60,26 +60,18 @@ public class DatosTest {
 					"Márquez Alón", new DireccionPostal("Alta", "10", "30012", "Murcia"), 
 					new Correo("pepe@gmail.com"), new Fecha(1990, 11, 12), 
 					new Fecha(2014, 12, 3), new ClaveAcceso("Miau#32"), RolUsuario.NORMAL);
-		} 
-		catch (ModeloException e) {
-			e.printStackTrace();
-		}
-		
-		try {
+
 			sesionPrueba = new SesionUsuario(fachada.obtenerUsuario("III1R"), new Fecha(), EstadoSesion.EN_PREPARACION);
-		} 
-		catch (ModeloException e) {
-			e.printStackTrace();
-		}
-		
-		mundoPrueba = fachada.obtenerMundo("MundoDemo");
-		try {
+
+			mundoPrueba = fachada.obtenerMundo("MundoDemo");
+
 			simulacionPrueba = new Simulacion(fachada.obtenerUsuario("III1R"), new Fecha(), new Mundo(), EstadoSimulacion.PREPARADA);
+
+			patronPrueba = fachada.obtenerPatron("PatronDemo");
 		} 
 		catch (ModeloException e) {
 			e.printStackTrace();
 		}
-		patronPrueba = fachada.obtenerPatron("PatronDemo");
 	}
 
 	@After
@@ -117,9 +109,7 @@ public class DatosTest {
 			// Usuario nuevo, que no existe.
 			fachada.altaUsuario(usrPrueba);
 		} 
-		catch (DatosException e) {
-			e.printStackTrace();
-		}
+		catch (DatosException e) { }
 		// Busca el mismo Usuario almacenado.
 		assertSame(usrPrueba, fachada.obtenerUsuario(usrPrueba));
 	}
@@ -131,9 +121,7 @@ public class DatosTest {
 			// Baja del mismo Usuario almacenado.
 			assertSame(usrPrueba, fachada.bajaUsuario(usrPrueba.getIdUsr()));
 		} 
-		catch (DatosException e) {
-			e.printStackTrace();
-		}
+		catch (DatosException e) { }
 	}
 
 	@Test
@@ -144,9 +132,7 @@ public class DatosTest {
 			usrPrueba.setApellidos("Ramírez Pinto");
 			fachada.actualizarUsuario(usrPrueba);
 		} 
-		catch (DatosException | ModeloException e) {
-			e.printStackTrace();
-		}
+		catch (DatosException | ModeloException e) { }
 		assertEquals(fachada.obtenerUsuario(usrPrueba).getApellidos(), "Ramírez Pinto");
 	}
 
@@ -244,13 +230,15 @@ public class DatosTest {
 
 	@Test
 	public void testActualizarSimulacion() {	
+		Simulacion simulacionNueva = null;
 		try {
+			simulacionNueva = new Simulacion(simulacionPrueba);
 			fachada.altaSimulacion(simulacionPrueba);
-			simulacionPrueba.setEstado(EstadoSimulacion.COMPLETADA);
-			fachada.actualizarSimulacion(simulacionPrueba);
+			simulacionNueva.setEstado(EstadoSimulacion.COMPLETADA);
+			fachada.actualizarSimulacion(simulacionNueva);
 		} 
-		catch (DatosException e) { }
-		assertEquals(fachada.obtenerSimulacion(simulacionPrueba).getEstado(), EstadoSimulacion.COMPLETADA);
+		catch (DatosException | ModeloException e) { }
+		assertEquals(fachada.obtenerSimulacion(simulacionPrueba), simulacionNueva);
 	}
 
 	@Test
@@ -290,7 +278,7 @@ public class DatosTest {
 			fachada.actualizarMundo(mundoNuevo);
 		} 
 		catch (DatosException | ModeloException e) { }
-		assertSame(fachada.obtenerMundo(mundoNuevo), mundoNuevo);
+		assertEquals(fachada.obtenerMundo(mundoNuevo), mundoNuevo);
 	}
 
 	@Test

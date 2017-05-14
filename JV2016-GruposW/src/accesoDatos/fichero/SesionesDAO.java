@@ -5,8 +5,8 @@
  * Colabora en el patron Fachada.
  * @since: prototipo2.0
  * @source: SesionesDAO.java 
- * @version: 2.1 - 2017.05.11 
- * @author: Alejandro, Judiht, Pedro, Ramón, Jose Maria
+ * @version: 2.1 - 2017.05.14 
+ * @author: ajp
  */
 
 package accesoDatos.fichero;
@@ -180,8 +180,11 @@ public class SesionesDAO implements OperacionesDAO, Persistente {
 		} 
 		catch (ModeloException e) { }
 		aux.setUsr(UsuariosDAO.getInstancia().obtener(idUsr));
-		//Busca posición inserción ordenada por idUsr + fecha. La última para el mismo usuario.
-		return separarSesionesUsr(obtenerPosicion(aux.getIdSesion()) - 1);
+		// Busca posición inserción (negativa base 1) ordenada por idUsr + fecha. 
+		// La última para el mismo usuario.
+		int posicion = -obtenerPosicion(aux.getIdSesion());
+		// Separa las sesiones del mismo usuario.
+		return separarSesionesUsr(posicion-2);
 	}
 
 	/**
@@ -259,9 +262,23 @@ public class SesionesDAO implements OperacionesDAO, Persistente {
 	@Override
 	public String listarDatos() {
 		StringBuilder listado = new StringBuilder();
-		for (SesionUsuario sesiones: datosSesiones) {
-			if (sesiones != null) {
-				listado.append("\n" + sesiones);
+		for (SesionUsuario sesion: datosSesiones) {
+			if (sesion != null) {
+				listado.append("\n" + sesion);
+			}
+		}
+		return listado.toString();
+	}
+	
+	/**
+	 * Obtiene el listado de todos los identificadores de las sesiones almacenadas.
+	 * @return el texto con los identificadores.
+	 */
+	public String listarIdSesiones() {
+		StringBuilder listado = new StringBuilder();
+		for (SesionUsuario sesion: datosSesiones) {
+			if (sesion != null) {
+				listado.append("\n" + sesion.getIdSesion());
 			}
 		}
 		return listado.toString();
@@ -272,7 +289,7 @@ public class SesionesDAO implements OperacionesDAO, Persistente {
 	 */
 	@Override
 	public void borrarTodo() {
-		datosSimulaciones = new ArrayList<Simulacion>();	
+		datosSesiones = new ArrayList<SesionUsuario>();	
 	}
 
 }//class

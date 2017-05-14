@@ -204,7 +204,8 @@ public class PatronesDAO implements OperacionesDAO {
 	 */
 	@Override
 	public void borrarTodo() {
-		instancia = null;
+		datosPatrones = new ArrayList<Patron>();
+		cargarPredeterminados();
 	}
 	
 } //class

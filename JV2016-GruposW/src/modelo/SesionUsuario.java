@@ -35,11 +35,9 @@ public class SesionUsuario implements Serializable {
 		this(new Usuario(), new Fecha(), EstadoSesion.EN_PREPARACION);
 	}
 
-	public SesionUsuario(SesionUsuario su) throws ModeloException {
-		this(su.usr, new Fecha(su.fecha), su.estado);
+	public SesionUsuario(SesionUsuario sesion) throws ModeloException {
+		this(sesion.usr, new Fecha(sesion.fecha), sesion.estado);
 	}
-	
-	// Métodos de acceso
 	
 	public Usuario getUsr() {
 		return usr;
@@ -57,8 +55,7 @@ public class SesionUsuario implements Serializable {
 	 * @return idSesion único generado.
 	 */
 	public String getIdSesion() {
-		return	usr.getIdUsr() + "-" + fecha.getAño() + fecha.getMes() + fecha.getDia() 
-		+ fecha.getHora() + fecha.getMinuto() + fecha.getSegundo();
+		return	usr.getIdUsr() + "-" + fecha.toTexto();
 	}
 	
 	public void setUsr(Usuario usr) {
@@ -158,9 +155,9 @@ public class SesionUsuario implements Serializable {
 	 * @return el objeto clonado.
 	*/
 	@Override
-	public Object clone() {
+	public SesionUsuario clone() {
 		// Utiliza el constructor copia.
-		Object clon = null;
+		SesionUsuario clon = null;
 		try {
 			clon = new SesionUsuario(this);
 		} catch (ModeloException e) { }

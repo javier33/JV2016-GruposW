@@ -142,7 +142,7 @@ public class DireccionPostal implements Serializable, Cloneable {
 		return true;
 	}
 
-	public String getCodigoPostal() {
+	public String getCP() {
 		return cp;
 	}
 
@@ -219,9 +219,9 @@ public class DireccionPostal implements Serializable, Cloneable {
 	 * @return el objeto clonado.
 	*/
 	@Override
-	public Object clone() {
+	public DireccionPostal clone() {
 		// Utiliza el constructor copia.
-		Object clon = null;
+		DireccionPostal clon = null;
 		try {
 			clon = new DireccionPostal(this);
 		} 

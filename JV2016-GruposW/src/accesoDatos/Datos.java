@@ -11,7 +11,7 @@ package accesoDatos;
 
 import java.util.List;
 
-import accesoDatos.memoria.*;
+import accesoDatos.fichero.*;
 import modelo.*;
 
 public class Datos {
@@ -177,6 +177,16 @@ public class Datos {
 	}
 
 	/**
+	 * Metodo fachada para obtener listado de todos
+	 * identificadores de sesiones almacenadas.  
+	 * Reenvia petición al método DAO específico.
+	 * @return - el texto.
+	 */
+	public String toStringIdSesiones() {
+		return sesionesDAO.listarIdSesiones();
+	}
+	
+	/**
 	 * Metodo fachada para eliminar todos
 	 * las sesiones.  
 	 * Reenvia petición al método DAO específico.
@@ -256,6 +266,16 @@ public class Datos {
 		return simulacionesDAO.listarDatos();
 	}
 
+	/**
+	 * Metodo fachada para obtener listado de todos
+	 * identificadores de sesiones almacenadas.  
+	 * Reenvia petición al método DAO específico.
+	 * @return - el texto.
+	 */
+	public String toStringIdSimulaciones() {
+		return simulacionesDAO.listarIdSimulaciones();
+	}
+	
 	/**
 	 * Metodo fachada para eliminar todos
 	 * las simulaciones.  

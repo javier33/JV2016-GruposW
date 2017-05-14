@@ -105,9 +105,9 @@ public class Correo implements Serializable, Cloneable {
 	 * @return el objeto clonado.
 	*/
 	@Override
-	public Object clone() {
+	public Correo clone() {
 		// Utiliza el constructor copia.
-		Object clon = null;
+		Correo clon = null;
 		try {
 			clon = new Correo(this);
 		} 

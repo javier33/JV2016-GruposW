@@ -35,10 +35,10 @@ public class UsuariosDAO  implements OperacionesDAO, Persistente {
 	private static UsuariosDAO instancia = null;
 
 	// Elementos de almacenamiento.
-	private static ArrayList<Usuario> datosUsuarios;
-	private static Map<String,String> equivalenciasId;
-	private static File fUsuarios;
-	private static File fEquivalId;
+	private ArrayList<Usuario> datosUsuarios;
+	private Map<String,String> equivalenciasId;
+	private File fUsuarios;
+	private File fEquivalId;
 
 	/**
 	 * Constructor por defecto de uso interno.
@@ -162,7 +162,7 @@ public class UsuariosDAO  implements OperacionesDAO, Persistente {
 	/**
 	 *  Guarda la lista recibida en el fichero de datos.
 	 */
-	private static void guardarDatos(Map<String,String> MapaEquivalencias) {
+	private void guardarDatos(Map<String,String> MapaEquivalencias) {
 		try {
 			FileOutputStream fosEquivalId = new FileOutputStream(fEquivalId);
 			ObjectOutputStream oosEquivalId = new ObjectOutputStream(fosEquivalId);
@@ -345,7 +345,9 @@ public class UsuariosDAO  implements OperacionesDAO, Persistente {
 		 */
 		@Override
 		public void borrarTodo() {
-			instancia = null;
+			datosUsuarios = new ArrayList<Usuario>();
+			equivalenciasId = new Hashtable<String, String>();
+			cargarPredeterminados();
 		}
 		
 	} //class

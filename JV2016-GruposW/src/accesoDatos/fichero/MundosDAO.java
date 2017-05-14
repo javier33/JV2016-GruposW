@@ -276,7 +276,8 @@ public class MundosDAO implements OperacionesDAO, Persistente {
 	 */
 	@Override
 	public void borrarTodo() {
-		instancia = null;	
+		datosMundos = new ArrayList<Mundo>();
+		cargarPredeterminados();	
 	}
 
 } // class
