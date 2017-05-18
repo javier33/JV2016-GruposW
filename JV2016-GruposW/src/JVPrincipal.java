@@ -4,31 +4,32 @@
  * Implementación del control de inicio de sesión y ejecución de la simulación por defecto.  
  * @since: prototipo1.0
  * @source: JVPrincipal.java 
- * @version: 2.0 - 2017/03/11 
+ * @version: 2.1 - 2017/05/17 
  * @author: ajp
  */
 
 import accesoDatos.Datos;
 import accesoDatos.test.DatosPrueba;
-import accesoUsr.Presentacion;
+import accesoUsr.control.ControlMenuPrincipal;
+import accesoUsr.control.ControlSesion;
 
 public class JVPrincipal {
 
 	public static void main(String[] args) {	
 		
-		Datos fachada = new Datos();
-		Presentacion presentacion = new Presentacion();
+		//DatosPrueba.cargarDatosPrueba();
 		
-		//DatosPrueba.cargarUsuariosPrueba();	
-		System.out.println(fachada.toStringDatosUsuarios());
+		//Datos fachada = new Datos();
+		//System.out.println(fachada.toStringDatosUsuarios());
+		//System.out.println(fachada.toStringIdSesiones());
+		//System.out.println(fachada.toStringIdSimulaciones());
 		
-		if (presentacion.iniciarSesionCorrecta()) {
-			presentacion.arrancarSimulacion();
-		}
-		else {		
-			System.out.println("\nDemasiados intentos fallidos...");
+		if (args.length == 0) { 
+			new ControlMenuPrincipal();
 		}	
-		System.out.println("Fin del programa.");
+		else {
+			new ControlMenuPrincipal(args[0]);
+		}	
 	}
 	
 } //class
