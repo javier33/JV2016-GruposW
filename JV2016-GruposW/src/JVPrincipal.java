@@ -1,7 +1,6 @@
 /** 
  * Proyecto: Juego de la vida.
- * Secuencia principal de arraque del programa.
- * Implementación del control de inicio de sesión y ejecución de la simulación por defecto.  
+ * Secuencia principal de arraque del programa. 
  * @since: prototipo1.0
  * @source: JVPrincipal.java 
  * @version: 2.1 - 2017/05/17 

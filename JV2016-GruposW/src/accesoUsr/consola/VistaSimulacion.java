@@ -4,7 +4,7 @@
  *  Colabora en el patron MVC
  *  @since: prototipo2.1
  *  @source: VistaSimulacionTexto.java 
- *  @version: 2.1 - 2017.05.08
+ *  @version: 2.1 - 2017.05.17
  *  @author: ajp
  */
 
@@ -13,9 +13,10 @@ package accesoUsr.consola;
 import java.io.Console;
 import java.util.Scanner;
 
+import accesoUsr.OperacionesVista;
 import accesoUsr.control.ControlSimulacion;
 
-public class VistaSimulacion {
+public class VistaSimulacion implements OperacionesVista {
 	// Atributos
 	final int CICLOS = 120;
 	private Console consola;
@@ -38,6 +39,7 @@ public class VistaSimulacion {
 		}
 	}
 	
+	@Override
 	public void mostrarMensaje(String mensaje) {
 		if (consola != null) {
 			consola.writer().println(mensaje);
@@ -55,7 +57,7 @@ public class VistaSimulacion {
 	}
 	
 	public void confirmar() {
-		this.mostrarMensaje("Simulación completada. "
+		this.mostrarMensaje("\nSimulación completada. "
 				+ "\nPulsa intro para seguir...");
 		if (consola != null) {
 			consola.readLine();
