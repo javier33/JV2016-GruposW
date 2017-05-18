@@ -13,7 +13,9 @@ package accesoUsr.consola;
 import java.io.Console;
 import java.util.Scanner;
 
-public class VistaMenuPrincipal {
+import accesoUsr.OperacionesVista;
+
+public class VistaMenuPrincipal implements OperacionesVista {
 
 	private Console consola;
 	private int opcionActiva;
@@ -67,6 +69,7 @@ public class VistaMenuPrincipal {
 		return opcionActiva;
 	}
 
+	@Override
 	public void mostrarMensaje(String mensaje) {
 		if (consola != null) {
 			consola.writer().println(mensaje);
@@ -74,4 +77,5 @@ public class VistaMenuPrincipal {
 		}
 		System.out.println(mensaje);
 	}
-}		
+
+} //class		

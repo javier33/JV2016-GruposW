@@ -13,7 +13,10 @@ package accesoUsr.consola;
 import java.io.Console;
 import java.util.Scanner;
 
-public class VistaSesion {
+import accesoUsr.OperacionesVista;
+import accesoUsr.OperacionesVistaSesion;
+
+public class VistaSesion implements OperacionesVista, OperacionesVistaSesion {
 	
 	private Console consola;
 	
@@ -21,6 +24,7 @@ public class VistaSesion {
 		consola = System.console();
 	}
 	
+	@Override
 	public String pedirIdUsr() {	
 		this.mostrarMensaje("Introduce el idUsr: ");
 		if (consola != null) {
@@ -30,6 +34,7 @@ public class VistaSesion {
 		return new Scanner(System.in).nextLine();
 	}
 	
+	@Override
 	public String pedirClaveAcceso() {
 		this.mostrarMensaje("Introduce clave acceso: ");
 		if (consola != null) {
@@ -39,6 +44,7 @@ public class VistaSesion {
 		return new Scanner(System.in).nextLine();
 	}
 
+	@Override
 	public void mostrarMensaje(String mensaje) {
 		if (consola != null) {
 			consola.writer().println(mensaje);
