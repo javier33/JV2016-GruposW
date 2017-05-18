@@ -5,7 +5,7 @@
  * Colabora en el patron Fachada.
  * @since: prototipo2.0
  * @source: UsuariosDAO.java 
- * @version: 2.0 - 2017/03/23 
+ * @version: 2.1 - 2017/04/03 
  * @author: ajp
  */
 
@@ -15,10 +15,13 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
+import accesoDatos.DatosException;
 import accesoDatos.OperacionesDAO;
+import config.Configuracion;
 import modelo.ClaveAcceso;
 import modelo.Correo;
 import modelo.DireccionPostal;
+import modelo.ModeloException;
 import modelo.Nif;
 import modelo.Usuario;
 import modelo.Usuario.RolUsuario;
@@ -61,23 +64,26 @@ public class UsuariosDAO  implements OperacionesDAO {
 	 *  Método para generar de datos predeterminados.
 	 */
 	private void cargarPredeterminados() {
-		String nombreUsr = "Admin";
-		String password = "Miau#0";	
-		Usuario usrPredeterminado = new Usuario(new Nif("00000000T"), nombreUsr, "Admin Admin", 
-				new DireccionPostal("Iglesia", "0", "30012", "Murcia"), 
-				new Correo("jv.admin" + "@gmail.com"), new Fecha(), 
-				new Fecha(), new ClaveAcceso(password), RolUsuario.ADMINISTRADOR);
-		datosUsuarios.add(usrPredeterminado);
-		registrarEquivalenciaId(usrPredeterminado);
+		try {
+			String nombreUsr = Configuracion.get().getProperty("usuario.admin");
+			String password = Configuracion.get().getProperty("usuario.passwordPredeterminada");	
+			Usuario usrPredeterminado = new Usuario(new Nif("00000000T"), nombreUsr, "Admin Admin", 
+					new DireccionPostal("Iglesia", "0", "30012", "Murcia"), 
+					new Correo("jv.admin" + "@gmail.com"), new Fecha(), 
+					new Fecha(), new ClaveAcceso(password), RolUsuario.ADMINISTRADOR);
+			datosUsuarios.add(usrPredeterminado);
+			registrarEquivalenciaId(usrPredeterminado);
 
-		nombreUsr = "Invitado";
-		password = "Miau#0";	
-		usrPredeterminado = new Usuario(new Nif("00000001R"), nombreUsr, "Invitado Invitado", 
-				new DireccionPostal("Iglesia", "00", "30012", "Murcia"), 
-				new Correo("jv.invitado" + "@gmail.com"), new Fecha(), 
-				new Fecha(), new ClaveAcceso(password), RolUsuario.INVITADO);
-		datosUsuarios.add(usrPredeterminado);
-		registrarEquivalenciaId(usrPredeterminado);
+			nombreUsr = Configuracion.get().getProperty("usuario.invitado");
+			password = Configuracion.get().getProperty("usuario.passwordPredeterminada");	
+			usrPredeterminado = new Usuario(new Nif("00000001R"), nombreUsr, "Invitado Invitado", 
+					new DireccionPostal("Iglesia", "00", "30012", "Murcia"), 
+					new Correo("jv.invitado" + "@gmail.com"), new Fecha(), 
+					new Fecha(), new ClaveAcceso(password), RolUsuario.INVITADO);
+			datosUsuarios.add(usrPredeterminado);
+			registrarEquivalenciaId(usrPredeterminado);
+		} 
+		catch (ModeloException e) { }
 	}
 
 	/**
@@ -150,10 +156,10 @@ public class UsuariosDAO  implements OperacionesDAO {
 	 *  Si hay coincidencia de identificador hace 23 intentos de variar la última letra
 	 *  procedente del NIF. Llama al generarVarianteIdUsr() de la clase Usuario.
 	 *	@param obj - Objeto a almacenar.
-	 *  @ - si ya existe.
+	 *  @throws DatosException - si ya existe.
 	 */
 	@Override
-	public void alta(Object obj)  {
+	public void alta(Object obj) throws DatosException {
 		assert obj != null : "Usuario null...";
 		Usuario usrNuevo = (Usuario) obj;										// Para conversión cast
 		int posicionInsercion = obtenerPosicion(usrNuevo.getIdUsr()); 
@@ -180,6 +186,7 @@ public class UsuariosDAO  implements OperacionesDAO {
 					intentos--;
 				} while (intentos > 0);
 			}
+			throw new DatosException("(ALTA) El Usuario: " + usrNuevo.getIdUsr() + " ya existe...");
 		}		
 	}
 
@@ -197,10 +204,11 @@ public class UsuariosDAO  implements OperacionesDAO {
 	/**
 	 * Elimina el objeto, dado el id utilizado para el almacenamiento.
 	 * @param idUsr - el identificador del objeto a eliminar.
-	 * @return - el Objeto eliminado. null - si no existe.
+	 * @return - el Objeto eliminado.
+	 * @throws DatosException - si no existe.
 	 */
 	@Override
-	public Object baja(String idUsr)  {
+	public Object baja(String idUsr) throws DatosException {
 		assert (idUsr != null);
 		int posicion = obtenerPosicion(idUsr); 							// En base 1
 		if (posicion > 0) {
@@ -210,16 +218,17 @@ public class UsuariosDAO  implements OperacionesDAO {
 			equivalenciasId.remove(usrEliminado.getCorreo());
 			return usrEliminado;
 		}
-		return posicion;
+		throw new DatosException("(BAJA) El Usuario: " + idUsr + " no existe...");
 	} 
 
 	/**
 	 *  Actualiza datos de un Usuario reemplazando el almacenado por el recibido. 
 	 *  No admitirá cambios en el idUsr.
-	 *	@param obj - Usuario con los cambios. null - si no existe.
+	 *	@param obj - Usuario con los cambios.
+	 *  @throws DatosException - si no existe.
 	 */
 	@Override
-	public void actualizar(Object obj)  {
+	public void actualizar(Object obj) throws DatosException {
 		assert obj != null;
 		Usuario usrActualizado = (Usuario) obj;									// Para conversión cast
 		int posicion = obtenerPosicion(usrActualizado.getIdUsr()); 				// En base 1
@@ -234,6 +243,7 @@ public class UsuariosDAO  implements OperacionesDAO {
 			datosUsuarios.set(posicion - 1, usrActualizado);  					// En base 0		
 			return;
 		}
+		throw new DatosException("(ACTUALIZAR) El Usuario: " + usrActualizado.getIdUsr() + " no existe...");
 	} 
 
 	/**
@@ -256,7 +266,9 @@ public class UsuariosDAO  implements OperacionesDAO {
 	 */
 	@Override
 	public void borrarTodo() {
-		instancia = null;
+		datosUsuarios = new ArrayList<Usuario>();
+		equivalenciasId = new Hashtable<String, String>();
+		cargarPredeterminados();
 	}
-
+	
 } //class

@@ -3,7 +3,7 @@
  * Interfaz con las operaciones básicas DAO, necesarias para la fachada.
  * @since: prototipo2.1
  * @source: OperacionesDAO.java  
- * @version: 2.0 - 2017.04.23 
+ * @version: 2.1 - 2017.04.23 
  * @author: ajp
  */
 
@@ -32,7 +32,7 @@ public interface OperacionesDAO {
 	 *	@param obj - Objeto a almacenar.
 	 *  @throws DatosException - si ya existe.
 	 */
-	void alta(Object obj);
+	void alta(Object obj) throws DatosException;
 	
 	/**
 	 * Elimina el objeto, dado el id utilizado para el almacenamiento.
@@ -40,14 +40,14 @@ public interface OperacionesDAO {
 	 * @return - el Objeto eliminado.
 	 * @throws DatosException - si no existe.
 	 */
-	Object baja(String id);
+	Object baja(String id) throws DatosException;
 	
 	/**
 	 *  Actualiza datos de un Objeto reemplazando el almacenado por el recibido.
 	 *	@param obj - Objeto nuevo.
 	 *  @throws DatosException - si no existe.
 	 */
-	void actualizar(Object obj);
+	void actualizar(Object obj) throws DatosException;
 	
 	/**
 	 * Obtiene el listado de todos los datos almacenados.

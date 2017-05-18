@@ -1,10 +1,9 @@
 /** 
  * Proyecto: Juego de la vida.
  * Representa el espacio y las leyes que determinan un mundo de simulación del según el modelo 2.
- * Se hace validación de datos pero no se gestionan todavía los errores correspondientes. 
  * @since: prototipo2.0
  * @source: Mundo.java 
- * @version: 2.0 - 2017.03.11
+ * @version: 2.1 - 2017.05.05
  * @author: ajp
  */
 
@@ -17,8 +16,12 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import config.Configuracion;
+import util.Formato;
+
 public class Mundo implements Leyes, Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
+	private static int sizePredeterminado = new Integer(Configuracion.get().getProperty("mundo.sizePredeterminado"));
 	private String nombre;
 	private List<Integer> constantes;
 	private Map<Patron, Posicion> distribucion;
@@ -33,23 +36,30 @@ public class Mundo implements Leyes, Serializable, Cloneable {
 	 * @param constantes
 	 * @param distribucion
 	 * @param espacio
+	 * @throws ModeloException 
 	 */
 	public Mundo(String nombre, List<Integer> constantes, 
-			Map<Patron, Posicion> distribucion, byte[][] espacio) {
+			Map<Patron, Posicion> distribucion, byte[][] espacio) throws ModeloException {
 		setNombre(nombre);
 		setConstantes(constantes);
 		setDistribucion(distribucion);
-		setEspacio(espacio);
+		try {
+			setEspacio(espacio);
+		} 
+		catch (ModeloException e) {
+			this.espacio = new byte[sizePredeterminado][sizePredeterminado];
+		}
 	}
 
 	/**
 	 * Constructor por defecto.
 	 * Establece el valor inicial, por defecto, de cada uno de los atributos.
 	 * Llama al constructor convencional de la propia clase.
+	 * @throws ModeloException 
 	 */
-	public Mundo() {
-		this("MundoDefecto", new ArrayList<Integer>(), 
-				new Hashtable<Patron, Posicion>(), null);
+	public Mundo() throws ModeloException {
+		this("MundoDefecto", new ArrayList<Integer>(), new Hashtable<Patron, Posicion>(), 
+				new byte[sizePredeterminado][sizePredeterminado]);
 	}
 
 	/**
@@ -59,17 +69,18 @@ public class Mundo implements Leyes, Serializable, Cloneable {
 	 * Llama al constructor convencional utilizando objetos obtenidos
 	 * con los contructores copia de los atributos.
 	 * El atributo espacio es clonado utilizando utilidades de clonación de arrays.
-	 * @param m - ea Mundo a clonar
+	 * @param mundo - el Mundo a clonar
+	 * @throws ModeloException 
 	 */
-	public Mundo(Mundo m) {
-		this(m.nombre, new ArrayList<Integer>(m.constantes), 
-				new Hashtable<Patron,Posicion>(m.distribucion), m.espacio);
+	public Mundo(Mundo mundo) throws ModeloException {
+		this(mundo.nombre, new ArrayList<Integer>(mundo.constantes), 
+				new Hashtable<Patron,Posicion>(mundo.distribucion), 
+				new byte[mundo.espacio.length][mundo.espacio.length]);
 
-		this.espacio = new byte[m.espacio.length][m.espacio.length];
-
-		for (int i=0; i <m.espacio.length; i++)
-			this.espacio[i] = Arrays.copyOf(m.espacio[i], m.espacio[i].length);
-		//System.arraycopy(m.espacio[i], 0, this.espacio[i], 0, m.espacio[i].length);	
+		for (int i=0; i <mundo.espacio.length; i++) {
+			this.espacio[i] = Arrays.copyOf(mundo.espacio[i], mundo.espacio[i].length);
+			//System.arraycopy(mundo.espacio[i], 0, this.espacio[i], 0, mundo.espacio[i].length);
+		}
 	}
 
 	public String getNombre() {
@@ -84,46 +95,84 @@ public class Mundo implements Leyes, Serializable, Cloneable {
 		return distribucion;
 	}
 
-
 	public byte[][] getEspacio() {
 		return espacio;
 	}
 
-	public void setNombre(String nombre) {
-		if (nombre == null) {
-			this.nombre = "MundoDefecto";
-		}
-		else {
-			this.nombre = nombre; 
-		}
-	}
-
-	public void setConstantes(List<Integer> parametros) {
-
-		if (parametros == null) {
-			this.constantes = new ArrayList<Integer>();
-		}
-		else {
-			this.constantes = parametros;
-		}
-	}
-
-	public void setDistribucion(Map<Patron, Posicion> distribucion) {
-		this.distribucion = distribucion;
-	}
-
-	public void setEspacio(byte[][] espacio) {
-		int tamaño = 12;
-		if (espacio == null || espacio.length == 0) {
-			this.espacio = new byte[tamaño][tamaño];
-			for (int i=0; i < this.espacio.length; i++) {
-				for (int j=0; j < this.espacio.length; j++) {
-					this.espacio[i][j] = 0; 
-				}
-			}
+	public void setNombre(String nombre) throws ModeloException {	
+		if (nombreValido(nombre)) {
+			this.nombre = nombre;
 			return;
 		}
-		this.espacio = espacio;
+		throw new ModeloException("El nombre: " + nombre + " no es válido...");
+	}
+
+	/**
+	 * Comprueba que el nombre sea correcto.
+	 * @param nombre.
+	 * @return true si cumple.
+	 */
+	private boolean nombreValido(String nombre) {
+		assert nombre != null;
+		return	nombre.matches(Formato.PATRON_NOMBRE_MUNDO_JV);
+	}
+
+	public void setConstantes(List<Integer> constantes) throws ModeloException {
+		if (constantesValidas(constantes)) {
+			this.constantes = constantes;
+			return;
+		}
+		throw new ModeloException("Las constantes del mundo: " + constantes + " no son válidas...");
+	}
+
+	/**
+	 * Comprueba que hay al menos una constante.
+	 * @param constantes.
+	 * @return true si cumple.
+	 */
+	private boolean constantesValidas(List<Integer> constantes) {
+		assert constantes != null;
+		return constantes.isEmpty();
+	}
+
+	public void setDistribucion(Map<Patron, Posicion> distribucion) throws ModeloException {
+		if (distribucionValida(distribucion)) {
+			this.distribucion = distribucion;
+			return;
+		}
+		throw new ModeloException("La distribucion del mundo: " + distribucion + " no es válida...");
+	}
+
+	/**
+	 * 
+	 * Comprueba que hay al menos un patrón en una posición.
+	 * @param distribucion.
+	 * @return true si cumple.
+	 */
+	private boolean distribucionValida(Map<Patron, Posicion> distribucion) {
+		assert distribucion != null;
+		return distribucion.isEmpty();
+	}
+
+	public void setEspacio(byte[][] espacio) throws ModeloException {
+		if (espacioValido(espacio)) {
+			this.espacio = espacio;
+			return;
+		}
+		throw new ModeloException("El espacio del mundo: " + espacio + " no es válido...");
+	}
+
+	/**
+	 * Comprueba que espacio tiene tamaño.
+	 * @param espacio.
+	 * @return true si cumple.
+	 */
+	private boolean espacioValido(byte[][] espacio) {
+		assert espacio != null;
+		if (espacio.length > 0) {
+			return true;
+		}
+		return false;
 	}
 
 	//Métodos de la interface Leyes
@@ -208,7 +257,7 @@ public class Mundo implements Leyes, Serializable, Cloneable {
 			if (nombre.equals(((Mundo)obj).nombre) &&
 					constantes.equals(((Mundo)obj).constantes) &&
 					distribucion.equals(((Mundo)obj).distribucion) &&
-					espacio.equals(((Mundo)obj).espacio) 
+					equalsEspacios(((Mundo)obj).espacio) 
 					) {
 				return true;
 			}
@@ -217,13 +266,36 @@ public class Mundo implements Leyes, Serializable, Cloneable {
 	}
 
 	/**
+	 * Comprueba si el espacio recibido como parámetro es igual al
+	 * atributo espacio.
+	 * @return falso si no cumple las condiciones.
+	 */
+	private boolean equalsEspacios(byte[][] espacio ) {	
+		for (int i = 0; i < this.espacio.length; i++) {
+			if (!Arrays.equals(this.espacio[i], espacio[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
 	 * Genera un clon del propio objeto realizando una copia profunda.
 	 * @return el objeto clonado.
 	 */
 	@Override
 	public Object clone() {
 		// Utiliza el constructor copia.
-		return new Mundo(this);
+		Object clon = null;
+		try {
+			clon = new Mundo(this);
+		} catch (ModeloException e) { }
+		return clon;
+	}
+
+	public Mundo actualizarEstado() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 } //class

@@ -1,19 +1,39 @@
 /** 
  * Proyecto: Juego de la vida.
- *  Resuelve todos los aspectos del almacenamiento del DTO Simulacion utilizando un ArrayList.
- *  Colabora en el patron Fachada.
- *  @since: prototipo2.0
- *  @source: SimulacionesDAO.java 
- *  @version: 2.0 - 2017.03.23 
- *  @author: ajp
+ * Resuelve todos los aspectos del almacenamiento del DTO Simulacion 
+ * utilizando un ArrayList persistente en un fichero.
+ * Colabora en el patron Fachada.
+ * @since: prototipo2.0
+ * @source: SimulacionesDAO.java 
+ * @version: 2.1 - 2017.05.14 
+ * @author: ajp
  */
 
-package accesoDatos.memoria;
+package accesoDatos.fichero;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+/** 
+ * Proyecto: Juego de la vida.
+ *  Resuelve todos los aspectos del almacenamiento del
+ *  DTO Simulacion utilizando un ArrayList persistente en fichero.
+ *  Colabora en el patron Fachada.
+ *  @since: prototipo2
+ *  @source: SimulacionesDAO.java 
+ *  @version: 1.0 - 2016/05/23 
+ *  @author: ajp
+ */
 import java.util.ArrayList;
 import java.util.List;
 
+import accesoDatos.DatosException;
 import accesoDatos.OperacionesDAO;
+import accesoDatos.memoria.UsuariosDAO;
+import config.Configuracion;
 import modelo.ModeloException;
 import modelo.Mundo;
 import modelo.Simulacion;
@@ -21,13 +41,14 @@ import modelo.Simulacion.EstadoSimulacion;
 import modelo.Usuario;
 import util.Fecha;
 
-public class SimulacionesDAO implements OperacionesDAO {
+public class SimulacionesDAO implements OperacionesDAO, Persistente {
 
-	// Requerido por el Singleton 
+	// Requerido por el Singleton. 
 	private static SimulacionesDAO instancia;
 
 	// Elemento de almacenamiento.
 	private static ArrayList<Simulacion> datosSimulaciones;
+	private static File fSimulaciones;
 
 	/**
 	 * Constructor por defecto de uso interno.
@@ -35,7 +56,14 @@ public class SimulacionesDAO implements OperacionesDAO {
 	 */
 	private SimulacionesDAO() {
 		datosSimulaciones = new ArrayList<Simulacion>();
-		cargarPredeterminados();
+		fSimulaciones = new File(Configuracion.get().getProperty("simulaciones.nombreFichero"));
+		try {
+			recuperarDatos();
+		} catch (DatosException e) {
+			if (e.getMessage().equals("El fichero de datos: " + fSimulaciones.getName() + " no existe...")) {	
+				cargarPredeterminados();
+			}
+		}
 	}
 
 	/**
@@ -62,10 +90,33 @@ public class SimulacionesDAO implements OperacionesDAO {
 		Simulacion simulacionDemo = null;
 		try {
 			simulacionDemo = new Simulacion(usrDemo, new Fecha(), mundoDemo, EstadoSimulacion.PREPARADA);
-		} catch (ModeloException e) {
+		} 
+		catch (ModeloException e) {
 			e.printStackTrace();
 		}
 		datosSimulaciones.add(simulacionDemo);
+		guardarDatos(datosSimulaciones);
+	}
+
+	//OPERACIONES DE PERSISTENCIA.
+	/**
+	 *  Recupera el Arraylist datosSimulaciones almacenados en fichero. 
+	 * @throws DatosException 
+	 */
+	@Override
+	public void recuperarDatos() throws DatosException {
+		try {
+			if (fSimulaciones.exists()) {
+				FileInputStream fisSimulaciones = new FileInputStream(fSimulaciones);
+				ObjectInputStream oisSimulaciones = new ObjectInputStream(fisSimulaciones);
+				datosSimulaciones = (ArrayList<Simulacion>) oisSimulaciones.readObject();
+				oisSimulaciones.close();
+				return;
+			}
+			throw new DatosException("El fichero de datos: " + fSimulaciones.getName() + " no existe...");
+		} 
+		catch (ClassNotFoundException e) {}
+		catch (IOException e) {}
 	}
 
 	/**
@@ -73,7 +124,29 @@ public class SimulacionesDAO implements OperacionesDAO {
 	 */
 	@Override
 	public void cerrar() {
-		// Nada que hacer si no hay persistencia.
+		guardarDatos();
+	}
+
+	/**
+	 *  Guarda el Arraylist de simulaciones de usuarios en fichero.
+	 */
+	@Override
+	public void guardarDatos() {
+		guardarDatos(datosSimulaciones);
+	}
+
+	/**
+	 *  Guarda la lista recibida en el fichero de datos.
+	 */
+	private void guardarDatos(List<Simulacion> listaSimulaciones) {
+		try {
+			FileOutputStream fosSimulaciones = new FileOutputStream(fSimulaciones);
+			ObjectOutputStream oosSesiones = new ObjectOutputStream(fosSimulaciones);
+			oosSesiones.writeObject(datosSimulaciones);		
+			oosSesiones.flush();
+			oosSesiones.close();
+		} 
+		catch (IOException e) {}	
 	}
 
 	// OPERACIONES DAO
@@ -170,9 +243,9 @@ public class SimulacionesDAO implements OperacionesDAO {
 	 *  Alta de una nueva Simulacion en orden y sin repeticiones según los idUsr más fecha. 
 	 *  Busca previamente la posición que le corresponde por búsqueda binaria.
 	 *  @param obj - Simulación a almacenar.
-	 *  @ - si ya existe.
+	 *  @throws DatosException - si ya existe.
 	 */	
-	public void alta(Object obj)  {
+	public void alta(Object obj) throws DatosException {
 		assert obj != null;
 		Simulacion simulNueva = (Simulacion) obj;								// Para conversión cast
 		int posicionInsercion = obtenerPosicion(simulNueva.getIdSimulacion()); 
@@ -180,31 +253,33 @@ public class SimulacionesDAO implements OperacionesDAO {
 			datosSimulaciones.add(-posicionInsercion - 1, simulNueva); 			// Inserta la simulación en orden.
 			return;
 		}
+		throw new DatosException("(ALTA) La Simulacion: " + simulNueva.getIdSimulacion() + " ya existe...");		
 	}
 
 	/**
 	 * Elimina el objeto, dado el id utilizado para el almacenamiento.
 	 * @param idSimulacion - identificador de la Simulacion a eliminar.
-	 * @return - la Simulacion eliminada. null - si no existe.
+	 * @return - la Simulacion eliminada.
+	 * @throws DatosException - si no existe.
 	 */
 	@Override
-	public Simulacion baja(String idSimulacion)  {
+	public Simulacion baja(String idSimulacion) throws DatosException {
 		assert (idSimulacion != null);
 		int posicion = obtenerPosicion(idSimulacion); 							// En base 1
 		if (posicion > 0) {
 			return datosSimulaciones.remove(posicion - 1); 						// En base 0
 		}
-		return null;
+		throw new DatosException("(BAJA) La Simulacion: " + idSimulacion + " no existe...");
 	}
 
 	/**
 	 *  Actualiza datos de una Simulacion reemplazando el almacenado por el recibido.
 	 *  No admitirá cambios en usr ni en la fecha.
 	 *	@param obj - Patron con las modificaciones.
-	 *  @ - si no existe.
+	 *  @throws DatosException - si no existe.
 	 */
 	@Override
-	public void actualizar(Object obj)  {
+	public void actualizar(Object obj) throws DatosException {
 		assert obj != null;
 		Simulacion simulActualizada = (Simulacion) obj;							// Para conversión cast
 		int posicion = obtenerPosicion(simulActualizada.getIdSimulacion()); 	// En base 1
@@ -213,6 +288,7 @@ public class SimulacionesDAO implements OperacionesDAO {
 			datosSimulaciones.set(posicion - 1, simulActualizada);  			// En base 0		
 			return;
 		}
+		throw new DatosException("(ACTUALIZAR) La Simulacion: " + simulActualizada.getIdSimulacion() + " no existe...");
 	}
 
 	/**
@@ -229,9 +305,9 @@ public class SimulacionesDAO implements OperacionesDAO {
 		}
 		return listado.toString();
 	}
-
+	
 	/**
-	 * Obtiene el listado de todos los identificadres de las simulaciones almacenadas.
+	 * Obtiene el listado de todos los identificadores de las simulaciones almacenadas.
 	 * @return el texto con los identificadores.
 	 */
 	public String listarIdSimulaciones() {
@@ -243,13 +319,14 @@ public class SimulacionesDAO implements OperacionesDAO {
 		}
 		return listado.toString();
 	}
-	
+
 	/**
 	 * Elimina todos las simulaciones almacenadas y regenera la demo predeterminada.
 	 */
 	@Override
 	public void borrarTodo() {
-		instancia = null;
+		datosSimulaciones = new ArrayList<Simulacion>();
+		cargarPredeterminados();
 	}
 
 } //class

@@ -1,18 +1,19 @@
-/** 
- * Proyecto: Juego de la vida.
- * Resuelve todos los aspectos relacionados con la simulación y la interacción de usuario.
- * @since: prototipo1.2
- * @source: Presentacion.java 
- * @version: 2.0 - 2017.03.22
- * @author: ajp
+/** Proyecto: Juego de la vida.
+ *  Resuelve todos los aspectos relacionados con la simulación y la interacción de usuario.
+ *  @since: prototipo1.2
+ *  @source: Presentacion.java 
+ *  @version: 2.0 - 2017.03.22
+ *  @author: ajp
  */
 
-package accesoUsr;
+package accesoDatos;
 
 import java.util.Scanner;
 
 import accesoDatos.Datos;
+import accesoDatos.DatosException;
 import modelo.ClaveAcceso;
+import modelo.ModeloException;
 import modelo.SesionUsuario;
 import modelo.Usuario;
 import util.Fecha;
@@ -71,10 +72,13 @@ public class Presentacion {
 			usrSesion = fachada.obtenerUsuario(idUsr);
 			if ( usrSesion != null) {	
 				ClaveAcceso claveIntroducida;
+				try {
 					claveIntroducida = new ClaveAcceso(clave);
 					if (usrSesion.getClaveAcceso().equals(claveIntroducida)) {
 						todoCorrecto = true;
 					}
+				} 
+				catch (ModeloException e) { }
 			}
 			if (todoCorrecto == false) {
 				intentos--;
@@ -87,10 +91,14 @@ public class Presentacion {
 		if (todoCorrecto) {
 			// Registra sesion de usuario.
 			SesionUsuario sesion = null;
+			try {
 				sesion = new SesionUsuario();
 			sesion.setUsr(usrSesion);					
 			sesion.setFecha(new Fecha());			    
-				fachada.altaSesion(sesion);	
+				fachada.altaSesion(sesion);
+			}
+			catch (ModeloException e) { }
+			catch (DatosException e) { }	
 			System.out.println("Sesión: " + fachada.obtenerSesion(usrSesion.getIdUsr() + sesion.getFecha().hashCode()) 
 			+ '\n' + "Iniciada por: " + usrSesion.getNombre() + " " + usrSesion.getApellidos());
 			return true;

@@ -18,8 +18,8 @@ import org.junit.Test;
 import modelo.ClaveAcceso;
 import modelo.Correo;
 import modelo.DireccionPostal;
+import modelo.ModeloException;
 import modelo.Nif;
-import modelo.Persona;
 import modelo.Usuario;
 import modelo.Usuario.RolUsuario;
 import util.Fecha;
@@ -27,61 +27,70 @@ import util.Fecha;
 public class UsuarioTest {
 	private Usuario usuario1; 
 	private Usuario usuario2; 
-
+	
 	/**
 	 * Método que se ejecuta antes de cada @Test para preparar datos de prueba.
-	 * @throws UtilException 
+	 * @throws ModeloException 
 	 */
 	@Before
-	public void crearDatosPrueba() {
+	public void iniciarlizarDatosPrueba() {
 		// Objetos para la prueba.
-		usuario1 = new Usuario(); 
-		usuario2 = new Usuario(new Nif(), "Luis", "Pérez Ruiz",
-				new DireccionPostal("C/Luna", "27", "30132", "Murcia"), new Correo(), 
-				new Fecha(), new Fecha(2000, 03, 21), new ClaveAcceso(), RolUsuario.INVITADO);
+		try {
+			usuario1 = new Usuario(); 
+			usuario2 = new Usuario(new Nif("00000000T"), "Luis", "Pérez Ruiz",
+					new DireccionPostal("Roncal", "10", "30130", "Murcia"), 
+					new Correo("luis@gmail.com"), new Fecha(2000, 03, 21),
+					new Fecha(2017,05,12), new ClaveAcceso(), RolUsuario.NORMAL);
+		} 
+		catch (ModeloException e) {
+			e.printStackTrace();
+		}
 	}
-
+	
 	/**
 	 * Método que se ejecuta después de cada @Test para limpiar datos de prueba.
 	 */
 	@After	
 	public void borrarDatosPrueba() {
 		usuario1 = null;
+		usuario2 = null;
 	}
-
+	
 	// Test CON DATOS VALIDOS
 	@Test
-	public void testGetContraseña() {
+	public void testGetClaveAcceso() {
 		assertNotNull(((Usuario)usuario2).getClaveAcceso());
 	}
-
+	
 	@Test
 	public void testGetRol() {
 		assertNotNull(((Usuario)usuario2).getRol());
 	}
-
+		
 	@Test
 	public void testSetFechaAlta() {
-		Fecha fecha = new Fecha(2012, 2, 9);
-		usuario1.setFechaAlta(fecha);
-		assertSame( usuario1.getFechaAlta(), fecha);
+		try {
+			usuario1.setFechaAlta(new Fecha(2012, 2, 9));
+		} 
+		catch (ModeloException e) { }
+		assertEquals( usuario1.getFechaAlta(), new Fecha(2012, 2, 9));
 	}
 
 	@Test
 	public void testSetClaveAcceso() {
-		ClaveAcceso clave = null;
-		clave = new ClaveAcceso("Hola#12");
-		usuario1.setClaveAcceso(clave);
-
-		assertSame(usuario1.getClaveAcceso(), clave);
+		try {
+			usuario1.setClaveAcceso(new ClaveAcceso("Hola#12"));
+			assertEquals(usuario1.getClaveAcceso(), new ClaveAcceso("Hola#12"));
+		} 
+		catch (ModeloException e) { } 
 	}
 
 	@Test
 	public void testSetRol() {
 		usuario1.setRol(RolUsuario.INVITADO);
-		assertSame(usuario1.getRol(), RolUsuario.INVITADO);
+		assertEquals(usuario1.getRol(), RolUsuario.INVITADO);
 	}
-
+	
 	@Test
 	public void testToString() {
 		assertNotNull(usuario2.toString());	
@@ -89,10 +98,14 @@ public class UsuarioTest {
 
 	@Test
 	public void testEqualsObject() {
-		usuario1 = new Usuario(new Nif(), "Luis", "Pérez Ruiz",
-				new DireccionPostal("C/Luna", "27", "30132", "Murcia"), new Correo(), 
-				new Fecha(), new Fecha(2000, 03, 21), new ClaveAcceso(), RolUsuario.INVITADO);
-		assertTrue(usuario1.equals(usuario2));
+		try {
+			usuario1 = new Usuario(new Nif("00000000T"), "Luis", "Pérez Ruiz",
+					new DireccionPostal("Roncal", "10", "30130", "Murcia"), 
+					new Correo("luis@gmail.com"), new Fecha(2000, 03, 21),
+					new Fecha(2017,05,12), new ClaveAcceso(), RolUsuario.NORMAL);
+		} 
+		catch (ModeloException e) { }
+		assertEquals(usuario1, usuario2);
 	}
 
 	public void testHashCode() {
@@ -106,31 +119,32 @@ public class UsuarioTest {
 		try {
 			usuario1.setNif(null);
 			fail("No debe llegar aquí...");
-		} catch (AssertionError e) { }
-
-		// Si funciona bien no debe cambiar el valor por defecto.
-		assertNotNull(usuario1.getClaveAcceso());
+		} 
+		catch (AssertionError e) { 
+			assertTrue(true);
+		}
 	}
-
+	
 	@Test
 	public void testSetFechaAltaNull() {
 		try {
 			usuario2.setFechaAlta(null);
 			fail("No debe llegar aquí...");
-		} catch (AssertionError e) { }
-
-		// Si funciona bien no debe cambiar el valor previo.
-		assertEquals(usuario2.getFechaAlta(), new Fecha(2000, 03, 21));
+		} 
+		catch (AssertionError | ModeloException e) {
+			assertTrue(true);
+		}
 	}
-
+	
 	@Test
 	public void testSetRolNull() {
 		try {
 			usuario1.setRol(null);
 			fail("No debe llegar aquí...");
-		} catch (AssertionError e) { }
-
-		// Si funciona bien no debe cambiar el valor previo por defecto.
-		assertEquals(usuario1.getRol(), RolUsuario.NORMAL);
+		} 
+		catch (AssertionError e) { 
+			assertTrue(true);
+		}
 	}
+	
 } // class

@@ -6,6 +6,7 @@
  *  @version: 2.1 - 2017.05.17
  *  @author: ajp
  */
+
 package accesoUsr.control;
 
 import java.util.ArrayList;
@@ -21,9 +22,6 @@ public class ControlMenuPrincipal {
 	private SesionUsuario sesionUsr;
 	private Datos fachada;
 
-	/**
-	 * @param sesionUsr (SesionUsuario)
-	 */
 	public ControlMenuPrincipal(String idUsr) {
 		initMenuPrincipal(idUsr);	
 	}

@@ -1,3 +1,4 @@
+
 /** Proyecto: Juego de la vida.
  *  Prueba Junit4 de la clase Correo según el modelo 2.1
  *  @since: prototipo2.0
@@ -17,7 +18,6 @@ import org.junit.Test;
 
 import modelo.Correo;
 import modelo.ModeloException;
-
 
 public class CorreoTest {
 	private Correo correo1;

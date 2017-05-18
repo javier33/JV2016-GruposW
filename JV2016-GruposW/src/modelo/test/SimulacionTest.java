@@ -34,7 +34,6 @@ public class SimulacionTest {
 	private Fecha fecha;
 	private Mundo mundo;
 
-
 	public SimulacionTest() {
 		try {
 			usr = new Usuario(new Nif("00000001R"), "Luis", "Pérez Ruiz",

@@ -1,6 +1,7 @@
 /** 
  * Proyecto: Juego de la vida.
- * Resuelve todos los aspectos del almacenamiento del DTO Patron utilizando un ArrayList.
+ * Resuelve todos los aspectos del almacenamiento del DTO SesionUsuario 
+ * utilizando un ArrayList persistente en fichero.
  * Colabora en el patron Fachada.
  * @since: prototipo2.0
  * @source: SesionesDAO.java 
@@ -8,31 +9,43 @@
  * @author: ajp
  */
 
-package accesoDatos.memoria;
+package accesoDatos.fichero;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import accesoDatos.DatosException;
 import accesoDatos.OperacionesDAO;
 import accesoDatos.fichero.UsuariosDAO;
+import config.Configuracion;
 import modelo.ModeloException;
 import modelo.SesionUsuario;
 
-public class SesionesDAO implements OperacionesDAO {
+public class SesionesDAO implements OperacionesDAO, Persistente {
 
 	// Requerido por el Singleton.
 	private static SesionesDAO instancia = null;
 
 	// Elemento de almacenamiento. 
 	private static ArrayList<SesionUsuario> datosSesiones;
+	private static File fSesiones;
 
 	/**
 	 * Constructor por defecto de uso interno.
 	 * Sólo se ejecutará una vez.
 	 */
-	private SesionesDAO() {
+	private SesionesDAO()  {
 		datosSesiones = new ArrayList<SesionUsuario>();
+		fSesiones = new File(Configuracion.get().getProperty("sesiones.nombreFichero"));
+		try {
+			recuperarDatos();
+		} catch (DatosException e) { }
 	}
 
 	/**
@@ -49,14 +62,57 @@ public class SesionesDAO implements OperacionesDAO {
 		return instancia;
 	}
 
+	//OPERACIONES DE PERSISTENCIA.
+	/**
+	 *  Recupera el Arraylist sesionesUsuario almacenados en fichero. 
+	 * @throws DatosException 
+	 */
+	@Override
+	public void recuperarDatos() throws DatosException {
+		try {
+			if (fSesiones.exists()) {
+				FileInputStream fisSesiones = new FileInputStream(fSesiones);
+				ObjectInputStream oisSesiones = new ObjectInputStream(fisSesiones);
+				datosSesiones = (ArrayList<SesionUsuario>) oisSesiones.readObject();
+				oisSesiones.close();
+				return;
+			}
+			throw new DatosException("El fichero de datos: " + fSesiones.getName() + " no existe...");
+		} 
+		catch (ClassNotFoundException e) {}
+		catch (IOException e) {}
+	}
+
 	/**
 	 *  Cierra datos.
 	 */
 	@Override
 	public void cerrar() {
-		// Nada que hacer si no hay persistencia.
+		guardarDatos();
 	}
-	
+
+	/**
+	 *  Guarda el Arraylist de sesiones de usuarios en fichero.
+	 */
+	@Override
+	public void guardarDatos() {
+		guardarDatos(datosSesiones);
+	}
+
+	/**
+	 *  Guarda la lista recibida en el fichero de datos.
+	 */
+	private void guardarDatos(List<SesionUsuario> listaSesiones) {
+		try {
+			FileOutputStream fosSesiones = new FileOutputStream(fSesiones);
+			ObjectOutputStream oosSesiones = new ObjectOutputStream(fosSesiones);
+			oosSesiones.writeObject(datosSesiones);		
+			oosSesiones.flush();
+			oosSesiones.close();
+		} 
+		catch (IOException e) {}	
+	}
+
 	//OPERACIONES DAO
 	/**
 	 * Búsqueda de sesión por idSesion.
@@ -101,7 +157,7 @@ public class SesionesDAO implements OperacionesDAO {
 		}	
 		return -(inicio + 1);					// Posición que ocuparía -negativo- base 1
 	}
-	
+
 	/**
 	 * Búsqueda de Sesion dado un objeto, reenvía al método que utiliza idSesion.
 	 * @param obj - la SesionUsuario a buscar.
@@ -146,7 +202,7 @@ public class SesionesDAO implements OperacionesDAO {
 		// devuelve la sublista de sesiones buscadas.
 		return datosSesiones.subList(primera, ultima+1);
 	}
-	
+
 	/**
 	 * Alta de una nueva SesionUsuario en orden y sin repeticiones según IdUsr + fecha. 
 	 * Busca previamente la posición que le corresponde por búsqueda binaria.
@@ -180,7 +236,7 @@ public class SesionesDAO implements OperacionesDAO {
 		}
 		throw new DatosException("(BAJA) La SesionUsuario: " + idSesion + " no existe...");
 	}
-	
+
 	/**
 	 *  Actualiza datos de una SesionUsuario reemplazando el almacenado por el recibido.
 	 *	@param obj - SesionUsuario con las modificaciones.
@@ -198,7 +254,7 @@ public class SesionesDAO implements OperacionesDAO {
 		}
 		throw new DatosException("(ACTUALIZAR) La SesionUsuario: " + sesionActualizada.getIdSesion() + " no existe...");
 	}
-	
+
 	/**
 	 * Obtiene el listado de todos las sesiones almacenadas.
 	 * @return el texto con el volcado de datos.
@@ -227,7 +283,6 @@ public class SesionesDAO implements OperacionesDAO {
 		}
 		return listado.toString();
 	}
-
 
 	/**
 	 * Elimina todos las sesiones almacenadas.

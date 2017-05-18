@@ -1,9 +1,10 @@
 /** 
  * Proyecto: Juego de la vida.
- * Organiza aspectos de gestión de la simulación según el modelo 2.
+ * Organiza aspectos de gestión de la simulación 
+ * según el modelo 2.
  * @since: prototipo2.0
  * @source: Simulacion.java 
- * @version: 2.0 - 2017.03.20
+ * @version: 2.1 - 2017.04.20
  * @author: ajp
  */
 
@@ -12,6 +13,7 @@ package modelo;
 import java.io.Serializable;
 
 import util.Fecha;
+import util.UtilException;
 
 public class Simulacion implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
@@ -30,8 +32,9 @@ public class Simulacion implements Serializable, Cloneable {
 	 * @param fecha
 	 * @param mundo
 	 * @param estado
+	 * @throws ModeloException 
 	 */
-	public Simulacion(Usuario usr, Fecha fecha, Mundo mundo, EstadoSimulacion estado) {
+	public Simulacion(Usuario usr, Fecha fecha, Mundo mundo, EstadoSimulacion estado) throws ModeloException {
 		setUsr(usr);
 		setFecha(fecha);
 		setMundo(mundo);
@@ -44,7 +47,7 @@ public class Simulacion implements Serializable, Cloneable {
 	 * Llama al constructor convencional de la propia clase.
 	 * @throws UtilException  
 	 */
-	public Simulacion() {
+	public Simulacion() throws ModeloException  {
 		this(new Usuario(), new Fecha(), new Mundo(), EstadoSimulacion.PREPARADA);
 	}
 
@@ -55,9 +58,10 @@ public class Simulacion implements Serializable, Cloneable {
 	 * El objeto Usuario es compartido (agregación).
 	 * Llama al constructor convencional.
 	 * @param s - la Simulacion a clonar
+	 * @throws ModeloException 
 	 */
-	public Simulacion(Simulacion s) {
-		this(s.usr, new Fecha(s.fecha), new Mundo(s.mundo), s.estado);
+	public Simulacion(Simulacion s) throws ModeloException {
+		this(s.usr, s.fecha, s.mundo, s.estado);
 	}
 
 	public Usuario getUsr() {
@@ -77,26 +81,52 @@ public class Simulacion implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Obtiene idSimulacion concatenando idUsr + un número como texto.
+	 * Obtiene idSimulacion concatenando idUsr + la marca de tiempo como texto.
 	 * @return el id único generado.
 	 */
 	public String getIdSimulacion() {
-		return	usr.getIdUsr() + ":" + fecha.getAño() + fecha.getMes() + fecha.getDia() 
-		+ fecha.getHora() + fecha.getMinuto() + fecha.getSegundo();
+		return	usr.getIdUsr() + ":" + fecha.toTexto();
 	}
 
 	public void setUsr(Usuario usr) {
+		assert usr != null;
 		this.usr = usr;
 	}
 
 	public void setMundo(Mundo mundo) {
+		assert mundo != null;
 		this.mundo = mundo;
 	}
 
-	public void setFecha(Fecha fecha) {
-		this.fecha = fecha;
+	public void setFecha(Fecha fecha) throws ModeloException {
+		if (fechaValida(fecha)) {
+			this.fecha = fecha;
+			return;
+		}
+		throw new ModeloException("La fecha: " + fecha + " no es válida...");
 	}
 
+	/**
+	 * Comprueba validez de una fecha de simulación.
+	 * @param fecha.
+	 * @return true si cumple.
+	 */
+	private boolean fechaValida(Fecha fecha) {
+		assert fecha != null;
+		return fechaCoherente(fecha);
+	}
+	
+	/**
+	 * Comprueba coherencia de una fecha.
+	 * @param fecha.
+	 * @return true si cumple.
+	 */
+	private boolean fechaCoherente(Fecha fecha) {
+		// Comprueba que fecha no es, por ejemplo, del futuro
+		// --Pendiente--
+		return true;
+	}
+	
 	public void setEstado(EstadoSimulacion estado) {
 		this.estado = estado;
 	}
@@ -130,7 +160,7 @@ public class Simulacion implements Serializable, Cloneable {
 	 * Son de la misma clase.
 	 * Tienen los mismos valores en los atributos; o son el mismo objeto.
 	 * @return falso si no cumple las condiciones.
-	 */
+	*/
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null && getClass() == obj.getClass()) {
@@ -147,15 +177,19 @@ public class Simulacion implements Serializable, Cloneable {
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Genera un clon del propio objeto realizando una copia profunda.
 	 * @return el objeto clonado.
-	 */
+	*/
 	@Override
-	public Object clone() {
+	public Simulacion clone() {
 		// Utiliza el constructor copia.
-		return new Simulacion(this);
+		Simulacion clon = null;
+		try {
+			clon = new Simulacion(this);
+		} catch (ModeloException e) { }
+		return clon;
 	}
-
+	
 } //class

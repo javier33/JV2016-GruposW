@@ -10,12 +10,11 @@
 import accesoDatos.Datos;
 import accesoDatos.test.DatosPrueba;
 import accesoUsr.control.ControlMenuPrincipal;
-import accesoUsr.control.ControlSesion;
 
 public class JVPrincipal {
 
 	public static void main(String[] args) {	
-		
+
 		//DatosPrueba.cargarDatosPrueba();
 		
 		//Datos fachada = new Datos();

@@ -7,7 +7,7 @@
  *  @author: ajp
  */
 
-package util;
+package modelo;
 
 import java.util.regex.Pattern;
 

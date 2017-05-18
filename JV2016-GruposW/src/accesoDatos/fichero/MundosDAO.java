@@ -1,32 +1,42 @@
 /** 
  * Proyecto: Juego de la vida.
- * Resuelve todos los aspectos del almacenamiento del DTO Mundo utilizando un ArrayList.
+ * Resuelve todos los aspectos del almacenamiento del DTO Mundo 
+ * utilizando un ArrayList persistente en fichero.
  * Colabora en el patron Fachada.
  * @since: prototipo2.0
  * @source: MundosDAO.java 
- * @version: 2.1 - 2017/04/03
+ * @version: 2.1 - 2017.04.09 
  * @author: ajp
  */
 
-package accesoDatos.memoria;
+package accesoDatos.fichero;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import accesoDatos.DatosException;
 import accesoDatos.OperacionesDAO;
+import config.Configuracion;
 import modelo.ModeloException;
 import modelo.Mundo;
 import modelo.Patron;
 import modelo.Posicion;
 
-public class MundosDAO implements OperacionesDAO {
-	
+public class MundosDAO implements OperacionesDAO, Persistente {
+
 	// Requerido por el patrón Singleton
 	private static MundosDAO instancia;
 
 	// Elementos de almacenamiento.
 	private static ArrayList<Mundo> datosMundos;
+	private static File fMundos;
 
 	/**
 	 * Constructor por defecto de uso interno.
@@ -34,7 +44,14 @@ public class MundosDAO implements OperacionesDAO {
 	 */
 	private MundosDAO() {
 		datosMundos = new ArrayList<Mundo>();
-		cargarPredeterminados();
+		fMundos = new File(Configuracion.get().getProperty("mundos.nombreFichero"));
+		try {
+			recuperarDatos();
+		} catch (DatosException e) {
+			if (e.getMessage().equals("El fichero de datos: " + fMundos.getName() + " no existe...")) {	
+				cargarPredeterminados();
+			}
+		}
 	}
 
 	/**
@@ -78,16 +95,60 @@ public class MundosDAO implements OperacionesDAO {
 			e.printStackTrace();
 		}
 		datosMundos.add(mundoDemo);
+		guardarDatos(datosMundos);
 	}
-	
+
+	//OPERACIONES DE PERSISTENCIA.
+	/**
+	 *  Recupera el Arraylist datosMundos almacenados en fichero. 
+	 * @throws DatosException 
+	 */
+	@Override
+	public void recuperarDatos() throws DatosException {
+		try {
+			if (fMundos.exists()) {
+				FileInputStream fisMundos = new FileInputStream(fMundos);
+				ObjectInputStream oisMundos = new ObjectInputStream(fisMundos);
+				datosMundos = (ArrayList<Mundo>) oisMundos.readObject();
+				oisMundos.close();
+				return;
+			}
+			throw new DatosException("El fichero de datos: " + fMundos.getName() + " no existe...");
+		} 
+		catch (ClassNotFoundException e) {} 
+		catch (IOException e) {}
+	}
+
 	/**
 	 *  Cierra datos.
 	 */
 	@Override
 	public void cerrar() {
-		// Nada que hacer si no hay persistencia.
+		guardarDatos();
 	}
-	
+
+	/**
+	 *  Guarda el Arraylist de mundos en fichero.
+	 */
+	@Override
+	public void guardarDatos() {
+		guardarDatos(datosMundos);
+	}
+
+	/**
+	 *  Guarda la lista recibida en el fichero de datos.
+	 */
+	private void guardarDatos(List<Mundo> listaMundos) {
+		try {
+			FileOutputStream fosMundos = new FileOutputStream(fMundos);
+			ObjectOutputStream oosSesiones = new ObjectOutputStream(fosMundos);
+			oosSesiones.writeObject(listaMundos);		
+			oosSesiones.flush();
+			oosSesiones.close();
+		} 
+		catch (IOException e) {}	
+	}
+
 	//OPERACIONES DAO
 	/**
 	 * Obtiene el objeto dado el id utilizado para el almacenamiento.
@@ -104,7 +165,7 @@ public class MundosDAO implements OperacionesDAO {
 		}
 		return null;
 	}
-	
+
 	/**
 	 *  Obtiene por búsqueda binaria, la posición que ocupa, o ocuparía,  un Mundo en 
 	 *  la estructura.
@@ -142,7 +203,7 @@ public class MundosDAO implements OperacionesDAO {
 	public Mundo obtener(Object obj)  {
 		return this.obtener(((Mundo) obj).getNombre());
 	}
-	
+
 	/**
 	 *  Alta de un objeto en el almacén de datos, 
 	 *  sin repeticiones, según el campo id previsto. 
