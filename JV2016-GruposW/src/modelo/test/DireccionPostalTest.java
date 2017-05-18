@@ -1,3 +1,11 @@
+/** Proyecto: Juego de la vida.
+ *  Prueba Junit4 de la clase DireccionPostal según el modelo 2.1
+ *  @since: prototipo2.0
+ *  @source: CorreoTest.java 
+ *  @version: 2.1 - 2017/05/14
+ *  @author: ajp
+ */
+
 package modelo.test;
 
 import static org.junit.Assert.assertEquals;
@@ -8,7 +16,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import modelo.Correo;
 import modelo.DireccionPostal;
 import modelo.ModeloException;
 

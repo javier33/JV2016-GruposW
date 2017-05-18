@@ -10,10 +10,13 @@
 package accesoUsr.control;
 
 import accesoDatos.DatosException;
+
+import java.awt.List;
 import java.util.ArrayList;
 
 import accesoDatos.Datos;
-import accesoUsr.VistaTexto.VistaSesionTexto;
+import accesoUsr.consola.VistaSesion;
+
 import config.Configuracion;
 import modelo.ClaveAcceso;
 import modelo.ModeloException;
@@ -24,7 +27,8 @@ import modelo.Usuario;
 import util.Fecha;
 
 public class ControlSesion {
-	private VistaSesionTexto vista;
+  
+	private VistaSesion vista;
 	private Usuario usrSesion;
 	private SesionUsuario sesion;
 	private Datos fachada;
@@ -39,15 +43,9 @@ public class ControlSesion {
 
 	private void initControlSesion(String idUsr) {
 		fachada = new Datos();
-		vista = new VistaSesionTexto();
-		vista.mostrar("JV-2016");
+		vista = new VistaSesion();
+		vista.mostrarMensaje("JV-2016");
 		iniciarSesionUsuario(idUsr);
-		ArrayList<Simulacion> simulacionesUsrActivo = new ArrayList<Simulacion>(fachada.obtenerSimulacionesUsuario(usrSesion.getIdUsr()));
-		
-		// La simulación predeterminada-demo es la primera del usuario predeterminado Invitado
-		new ControlSimulacion(simulacionesUsrActivo.get(0));		
-		fachada.cerrar();
-		vista.mostrar("\nFin de programa...");
 	}
 
 	/**
@@ -61,19 +59,16 @@ public class ControlSesion {
 		do {
 			if (idUsr == null) {
 				// Pide credencial usuario si llega null.
-				vista.mostrar("Introduce el idUsr: ");
 				credencialUsr = vista.pedirIdUsr();	
 			}
 			else {
-				vista.mostrar(credencialUsr);
+				vista.mostrarMensaje(credencialUsr);
 			}	
 			credencialUsr = credencialUsr.toUpperCase();
-			// Pide contraseña.
-			vista.mostrar("Introduce clave acceso: ");
 			String clave = vista.pedirClaveAcceso();
 
 			// Busca usuario coincidente con credencial.
-			vista.mostrar(credencialUsr);
+			vista.mostrarMensaje(credencialUsr);
 			usrSesion = fachada.obtenerUsuario(credencialUsr);
 			if ( usrSesion != null) {			
 				try {
@@ -86,19 +81,23 @@ public class ControlSesion {
 					e.printStackTrace();
 				}
 				intentos--;
-				vista.mostrar("Credenciales incorrectas...");
-				vista.mostrar("Quedan " + intentos + " intentos... ");
+				vista.mostrarMensaje("Credenciales incorrectas...");
+				vista.mostrarMensaje("Quedan " + intentos + " intentos... ");
 			}
 		}
 		while (intentos > 0);
 	
-		if (intentos <= 0){
-			vista.mostrar("Fin del programa...");
+		if (intentos <= 0) {
+			vista.mostrarMensaje("Fin del programa...");
 			fachada.cerrar();
 			System.exit(0);	
 		}
 	}
 
+	public SesionUsuario getSesion() {
+		return sesion;
+	}
+  
 	/**
 	 * Crea la sesion de usuario 
 	 */
@@ -116,7 +115,7 @@ public class ControlSesion {
 		} catch (DatosException e) {
 			e.printStackTrace();
 		}	
-		vista.mostrar("Sesión: " + sesion.getIdSesion()
+		vista.mostrarMensaje("Sesión: " + sesion.getIdSesion()
 		+ '\n' + "Iniciada por: " + usrSesion.getNombre());	
 	}
 

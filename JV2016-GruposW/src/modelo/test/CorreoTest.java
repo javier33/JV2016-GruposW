@@ -1,3 +1,13 @@
+
+/** Proyecto: Juego de la vida.
+ *  Prueba Junit4 de la clase Correo según el modelo 2.1
+ *  @since: prototipo2.0
+ *  @source: CorreoTest.java 
+ *  @version: 2.1 - 2017/05/03
+ *  @author: ajp
+ *  @author: Grupo 1
+ */
+
 package modelo.test;
 
 import static org.junit.Assert.*;
@@ -8,15 +18,6 @@ import org.junit.Test;
 
 import modelo.Correo;
 import modelo.ModeloException;
-
-/** Proyecto: Juego de la vida.
- *  Prueba Junit4 de la clase Correo según el modelo 2.1
- *  @since: prototipo2.0
- *  @source: CorreoTest.java 
- *  @version: 2.1 - 2017/05/03
- *  @author: ajp
- *  @author: Grupo 1
- */
 
 public class CorreoTest {
 	private Correo correo1;

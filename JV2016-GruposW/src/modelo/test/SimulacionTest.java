@@ -1,3 +1,12 @@
+/** Proyecto: Juego de la vida.
+ *  Prueba Junit4 de la clase Simulacion según el modelo 2.1
+ *  @since: prototipo2.0
+ *  @source: CorreoTest.java 
+ *  @version: 2.1 - 2017/05/14
+ *  @author: ajp
+ *  @author: Grupo 1
+ */
+
 package modelo.test;
 
 import static org.junit.Assert.*;
@@ -17,21 +26,13 @@ import modelo.Usuario;
 import modelo.Simulacion.EstadoSimulacion;
 import modelo.Usuario.RolUsuario;
 import util.Fecha;
-/** Proyecto: Juego de la vida.
- *  Prueba Junit4 de la clase Simulacion según el modelo 2.1
- *  @since: prototipo2.0
- *  @source: CorreoTest.java 
- *  @version: 2.1 - 2017/05/14
- *  @author: ajp
- *  @author: Grupo 1
- */
+
 public class SimulacionTest {
 	private Simulacion simulacion1;
 	private Simulacion simulacion2;
 	private Usuario usr;
 	private Fecha fecha;
 	private Mundo mundo;
-
 
 	public SimulacionTest() {
 		try {
