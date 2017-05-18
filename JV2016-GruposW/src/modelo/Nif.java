@@ -1,10 +1,11 @@
-/** Proyecto: Juego de la vida.
- *  Implementa el concepto de Nif según el modelo 2
- *  Se hace validación de datos pero no se gestionan todavía los errores correspondientes.
- *  @since: prototipo1.2
- *  @source: Nif.java 
- *  @version: 2.0 - 2017.02.14
- *  @author: ajp
+/** 
+ * Proyecto: Juego de la vida.
+ * Implementa el concepto de Nif según el modelo 2
+ * Se hace validación de datos pero no se gestionan todavía los errores correspondientes.
+ * @since: prototipo1.2
+ * @source: Nif.java 
+ * @version: 2.1 - 2017.04.25
+ * @author: ajp
  */
 
 package modelo;
@@ -16,15 +17,15 @@ public class Nif implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 	private String texto;
 
-	public Nif(String texto) {
+	public Nif(String texto) throws ModeloException {
 		setTexto(texto);
 	}
 
-	public Nif() {
+	public Nif() throws ModeloException {
 		this("00000000T");
 	}
 
-	public Nif(Nif nif) {
+	public Nif(Nif nif) throws ModeloException {
 		this(new String(nif.texto));
 	}
 
@@ -32,17 +33,22 @@ public class Nif implements Serializable, Cloneable {
 		return texto;
 	}
 
-	public void setTexto(String texto) {
-		assert nifValido(texto);
-		this.texto = texto;
+	public void setTexto(String texto) throws ModeloException {
+		if (nifValido(texto)) {
+			this.texto = texto;
+			return;
+		}
+		throw new ModeloException("El NIF: " + texto + " no es válido...");	
 	}
 
+	/**
+	 * Comprueba la validez del formato.
+	 * @param texto del NIF
+	 * @return true si la letra es correcta.
+	 */
 	private boolean nifValido(String texto) {
-		if (texto != null) {
-			return	texto.matches(Formato.PATRON_NIF) 
-					&& letraNIFValida(texto);
-		}
-		return false;
+		assert texto != null;
+		return	texto.matches(Formato.PATRON_NIF) && letraNIFValida(texto);
 	}
 
 	/**
@@ -57,7 +63,7 @@ public class Nif implements Serializable, Cloneable {
 		}
 		return false;
 	} 
-
+	  
 	@Override
 	public String toString() {
 		return texto;
@@ -102,9 +108,14 @@ public class Nif implements Serializable, Cloneable {
 	 * @return el objeto clonado.
 	 */
 	@Override
-	public Object clone() {
+	public Nif clone() {
 		// Utiliza el constructor copia.
-		return new Nif(this);
+		Nif clon = null;
+		try {
+			clon = new Nif(this);
+		} 
+		catch (ModeloException e) { }
+		return clon;
 	}
 
 } // class

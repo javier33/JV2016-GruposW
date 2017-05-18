@@ -6,7 +6,7 @@
  *  @author: ajp
  */
 
-package accesoUsr;
+package accesoDatos;
 
 import java.util.Scanner;
 

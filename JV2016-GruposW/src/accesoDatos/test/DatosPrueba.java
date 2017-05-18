@@ -13,9 +13,11 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import util.Fecha;
 import accesoDatos.Datos;
+import accesoDatos.DatosException;
 import modelo.ClaveAcceso;
 import modelo.Correo;
 import modelo.DireccionPostal;
+import modelo.ModeloException;
 import modelo.Mundo;
 import modelo.Nif;
 import modelo.Patron;
@@ -60,12 +62,17 @@ public class DatosPrueba {
 	private static void cargarUsuariosPrueba() {
 		String[] NifValidos = { "00000002W", "00000003A", "00000004G", "00000005M", "00000006Y", "00000007F"};
 		for (int i = 0; i < NifValidos.length ; i++) {
-			Usuario usr =  new Usuario(new Nif(NifValidos[i]), "Pepe",
-					"López Pérez", new DireccionPostal("Alta", "10", "30012", "Murcia"), 
-					new Correo("pepe" + i + "@gmail.com"), new Fecha(2000, 11, 30), 
-					new Fecha(), new ClaveAcceso(), RolUsuario.NORMAL);
+			try {
+				Usuario usr =  new Usuario(new Nif(NifValidos[i]), "Pepe",
+						"López Pérez", new DireccionPostal("Alta", "10", "30012", "Murcia"), 
+						new Correo("pepe" + i + "@gmail.com"), new Fecha(2000, 11, 30), 
+						new Fecha(), new ClaveAcceso(), RolUsuario.NORMAL);
 
-			fachada.altaUsuario(usr);
+				fachada.altaUsuario(usr);
+			} 
+			catch (DatosException | ModeloException e) { 
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -75,10 +82,19 @@ public class DatosPrueba {
 	private static void cargarSesionesPrueba() {
 		Usuario usrPrueba1 = fachada.obtenerUsuario("AAA0T");
 		Usuario usrPrueba2 = fachada.obtenerUsuario("III1R");
-		SesionUsuario sesionPrueba1 = new SesionUsuario(usrPrueba1, new Fecha(), EstadoSesion.CERRADA);
-		SesionUsuario sesionPrueba2 = new SesionUsuario(usrPrueba2, new Fecha(), EstadoSesion.CERRADA);
-		fachada.altaSesion(sesionPrueba1);
-		fachada.altaSesion(sesionPrueba2);
+		Fecha fechaPrueba1 = new Fecha();
+		Fecha fechaPrueba2 = new Fecha();
+		fechaPrueba2.addSegundos(1);		
+		try {
+			fachada.altaSesion(new SesionUsuario(usrPrueba1, fechaPrueba1, EstadoSesion.CERRADA));
+			fachada.altaSesion(new SesionUsuario(usrPrueba2, fechaPrueba1, EstadoSesion.CERRADA));
+			fachada.altaSesion(new SesionUsuario(usrPrueba1, fechaPrueba2, EstadoSesion.CERRADA));
+			fachada.altaSesion(new SesionUsuario(usrPrueba2, fechaPrueba2, EstadoSesion.CERRADA));
+
+		} 
+		catch (DatosException | ModeloException e) { 
+			e.printStackTrace();		
+		}
 	}
 
 	/**
@@ -88,40 +104,55 @@ public class DatosPrueba {
 	private static void cargarSimulacionesPrueba() {
 		Usuario usrPrueba = fachada.obtenerUsuario("III1R");
 		Mundo mundoPrueba = fachada.obtenerMundo("MundoDemo");
-		Simulacion simulacionPrueba1 = new Simulacion(usrPrueba, new Fecha(), mundoPrueba, EstadoSimulacion.PREPARADA);
-		Simulacion simulacionPrueba2 = new Simulacion(usrPrueba, new Fecha(), mundoPrueba, EstadoSimulacion.PREPARADA);
-		fachada.altaSimulacion(simulacionPrueba1);
-		fachada.altaSimulacion(simulacionPrueba2);
+		Fecha fechaPrueba1 = new Fecha();
+		Fecha fechaPrueba2 = new Fecha();
+		Fecha fechaPrueba3 = new Fecha();
+		fechaPrueba1.addSegundos(1);
+		fechaPrueba2.addSegundos(2);
+		fechaPrueba3.addSegundos(3);
+		try {
+			fachada.altaSimulacion(new Simulacion(usrPrueba, fechaPrueba1, mundoPrueba, EstadoSimulacion.COMPLETADA));
+			fachada.altaSimulacion(new Simulacion(usrPrueba, fechaPrueba2, mundoPrueba, EstadoSimulacion.INICIADA));
+			fachada.altaSimulacion(new Simulacion(usrPrueba, fechaPrueba3, mundoPrueba, EstadoSimulacion.PREPARADA));
+		} 
+		catch (DatosException | ModeloException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Genera Mundo de prueba válidos dentro 
 	 * de los almacenes de datos.
 	 */
-	private static void cargarMundosPrueba() {		
-		// En este array los 0 indican celdas con célula muerta y los 1 vivas
-		byte[][] espacioPrueba =  new byte[][] { 
-			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
-			{ 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
-			{ 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 }, 
-			{ 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
-			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  
-			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  
-			{ 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  
-			{ 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
-			{ 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  
-			{ 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  
-			{ 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  
-			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  
-			{ 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  
-			{ 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
-			{ 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
-			{ 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
-			{ 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
-			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }  
-		};
-		Mundo mundoPrueba = new Mundo("MundoPrueba", new ArrayList<Integer>(), new Hashtable<Patron,Posicion>(), espacioPrueba);
-		fachada.altaMundo(mundoPrueba);
+	private static void cargarMundosPrueba() {	
+		try {		
+			// En este array los 0 indican celdas con célula muerta y los 1 vivas
+			byte[][] espacioPrueba =  new byte[][] { 
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
+				{ 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
+				{ 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 }, 
+				{ 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  
+				{ 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  
+				{ 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
+				{ 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  
+				{ 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  
+				{ 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  
+				{ 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  
+				{ 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
+				{ 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
+				{ 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
+				{ 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }  
+			};
+			Mundo mundoPrueba = new Mundo("MundoPrueba", new ArrayList<Integer>(), new Hashtable<Patron,Posicion>(), espacioPrueba);
+			fachada.altaMundo(mundoPrueba);
+		} 
+		catch (DatosException | ModeloException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -129,15 +160,21 @@ public class DatosPrueba {
 	 * del almacén de datos.
 	 */
 	private static void cargarPatronesPrueba() {
-		byte[][] esquemaPrueba =  new byte[][]{ 
+		byte[][] esquemaPrueba =  new byte[][] { 
 			{ 0, 0, 0, 0 }, 
 			{ 1, 0, 1, 0 }, 
 			{ 1, 0, 0, 1 }, 
 			{ 1, 1, 1, 1 }, 
 			{ 1, 1, 0, 0 }
 		};
-		Patron patronPrueba = new Patron("PatronPrueba", esquemaPrueba);
-		fachada.altaPatron(patronPrueba);
+
+		try {
+			Patron patronPrueba = new Patron("PatronPrueba", esquemaPrueba);
+			fachada.altaPatron(patronPrueba);
+		} 
+		catch (DatosException | ModeloException e) {
+			e.printStackTrace();
+		}
 	}
 
 } //class

@@ -25,7 +25,6 @@ public class ClaveAccesoTest {
 	private ClaveAcceso clave1;
 	private ClaveAcceso clave2 ;
 	
-	
 	@Before
 	public void iniciarlizarDatosPrueba() {	
 		try {

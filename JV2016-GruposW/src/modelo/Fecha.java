@@ -7,7 +7,7 @@
  *  @author: ajp
  */
 
-package util;
+package modelo;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -221,15 +221,6 @@ public class Fecha implements Serializable {
 	
 	public int compareTo(Fecha fecha) {
 		return calendario.compareTo(fecha.calendario);
-	}
-	
-	/**
-	 * Obtiene texto de 14 caracteres normalizado de la marca de tiempo con precisión de segundo.
-	 * @return el texto formateado compacto.  
-	 */
-	public String toTexto() {
-		return String.format(
-				"%4d%02d%02d%02d%02d%02d", getAño(), getMes(), getDia(), getHora(), getMinuto(), getSegundo());		
 	}
 	
 	@Override

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import accesoDatos.Datos;
 import accesoUsr.consola.VistaSesion;
+
 import config.Configuracion;
 import modelo.ClaveAcceso;
 import modelo.ModeloException;
@@ -26,6 +27,7 @@ import modelo.Usuario;
 import util.Fecha;
 
 public class ControlSesion {
+  
 	private VistaSesion vista;
 	private Usuario usrSesion;
 	private SesionUsuario sesion;
@@ -85,7 +87,7 @@ public class ControlSesion {
 		}
 		while (intentos > 0);
 	
-		if (intentos <= 0){
+		if (intentos <= 0) {
 			vista.mostrarMensaje("Fin del programa...");
 			fachada.cerrar();
 			System.exit(0);	
@@ -95,7 +97,7 @@ public class ControlSesion {
 	public SesionUsuario getSesion() {
 		return sesion;
 	}
-	
+  
 	/**
 	 * Crea la sesion de usuario 
 	 */

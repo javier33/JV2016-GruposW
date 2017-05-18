@@ -3,7 +3,7 @@
  * Clase JUnit de prueba automatizada de las características de la clase Nif según el modelo 2.
  * @since: prototipo2
  * @source: TestNif.java 
- * @version: 2.0 - 2017.03.20
+ * @version: 2.1 - 2017.04.25
  * @author: ajp
  */
 
@@ -15,6 +15,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import modelo.Correo;
+import modelo.ModeloException;
 import modelo.Nif;
 
 public class NifTest {
@@ -25,10 +27,15 @@ public class NifTest {
 	 * Método que se ejecuta antes de cada @Test para preparar datos de prueba.
 	 */
 	@Before
-	public void crearDatosPrueba() {
-		// Objetos para la prueba.
-		nif1 = new Nif(); 
-		nif2 = new Nif("00000001R");
+	public void iniciarlizarDatosPrueba() {
+		try {
+			// Objetos para la prueba.
+			nif1 = new Nif(); 
+			nif2 = new Nif("00000001R");
+		} 
+		catch (ModeloException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -42,20 +49,20 @@ public class NifTest {
 	// Test CON DATOS VALIDOS
 	@Test
 	public void testNifConvencional() {
-		assertNotNull(nif2);
 		assertEquals(nif2.getTexto(), "00000001R");
 	}
 
 	@Test
 	public void testNifDefecto() {
-		assertTrue(nif1 != null);
 		assertEquals(nif1.getTexto(), "00000000T");
 	}
 
 	@Test
 	public void testNifCopia() {
-		nif1 = new Nif(nif2);
-		assertNotSame(nif1, nif2);
+		try {
+			assertEquals(nif2, new Nif(nif2));
+		} 
+		catch (ModeloException e) {	}
 	}
 
 	@Test
@@ -65,7 +72,10 @@ public class NifTest {
 
 	@Test
 	public void testSetTexto() {
-		nif1.setTexto("00000001R");
+		try {
+			nif1.setTexto("00000001R");
+		} 
+		catch (ModeloException e) {	}
 		assertEquals(nif1.getTexto(), "00000001R");
 	}
 
@@ -76,14 +86,16 @@ public class NifTest {
 
 	@Test
 	public void testEqualsObject() {
-		nif1 = new Nif("00000001R");
+		try {
+			nif1 = new Nif("00000001R");
+		} 
+		catch (ModeloException e) { }
 		assertTrue(nif1.equals(nif2));
 	}
 
 	@Test
 	public void testClone() {
-		nif1 = (Nif) nif2.clone();
-		assertNotSame(nif1, nif2);
+		assertNotSame(nif2, nif2.clone());
 	}
 
 	@Test
@@ -98,10 +110,10 @@ public class NifTest {
 			String texto = null;
 			nif1 = new Nif(texto);
 			fail("No debe llegar aquí...");
-		} catch (AssertionError e) { }
-
-		// Si funciona bien no debe cambiar el valor por defecto.
-		assertEquals(nif1.getTexto(), "00000000T");
+		} 
+		catch (AssertionError | ModeloException e) { 
+			assertTrue(true);
+		}
 	}
 
 	@Test
@@ -109,10 +121,10 @@ public class NifTest {
 		try {
 			nif1 = new Nif("00000000-T");
 			fail("No debe llegar aquí...");
-		} catch (AssertionError e) { }
-
-		// Si funciona bien no debe cambiar el valor por defecto.
-		assertEquals(nif1.getTexto(), "00000000T");
+		}
+		catch (AssertionError | ModeloException e) { 
+			assertTrue(true);
+		}
 	}
 
 	@Test
@@ -120,10 +132,10 @@ public class NifTest {
 		try {
 			nif1 = new Nif("00000000F");
 			fail("No debe llegar aquí...");
-		} catch (AssertionError e) { }
-
-		// Si funciona bien no debe cambiar el valor por defecto.
-		assertEquals(nif1.getTexto(), "00000000T");
+		} 
+		catch (AssertionError | ModeloException e) { 
+			assertTrue(true);
+		}
 	}
 
 	@Test
@@ -131,10 +143,10 @@ public class NifTest {
 		try {
 			nif1.setTexto(null);
 			fail("No debe llegar aquí...");
-		} catch (AssertionError e) { }
-
-		// Si funciona bien no debe cambiar el valor por defecto.
-		assertEquals(nif1.getTexto(), "00000000T");
+		} 
+		catch (AssertionError | ModeloException e) { 
+			assertTrue(true);
+		}
 	}
 
 	@Test
@@ -142,10 +154,10 @@ public class NifTest {
 		try {
 			nif1.setTexto("00000000-T");
 			fail("No debe llegar aquí...");
-		} catch (AssertionError e) { }
-
-		// Si funciona bien no debe cambiar el valor por defecto.
-		assertEquals(nif1.getTexto(), "00000000T");
+		} 
+		catch (AssertionError | ModeloException e) { 
+			assertTrue(true);
+		}
 	}
 
 	@Test
@@ -153,10 +165,10 @@ public class NifTest {
 		try {
 			nif1.setTexto("00000000F");
 			fail("No debe llegar aquí...");
-		} catch (AssertionError e) { }
-
-		// Si funciona bien no debe cambiar el valor por defecto.
-		assertEquals(nif1.getTexto(), "00000000T");
+		} 
+		catch (AssertionError | ModeloException e) { 
+			assertTrue(true);
+		}
 	}
 
 } //class

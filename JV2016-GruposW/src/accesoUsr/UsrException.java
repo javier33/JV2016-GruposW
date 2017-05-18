@@ -1,9 +1,9 @@
 /** 
  * Proyecto: Juego de la vida.
- * Maneja los errores de las clases del modelo.
+ * Maneja los errores de acceso del usuario.
  *  @since: prototipo2.1
  *  @source: UsrException.java 
- * @version: 2.1 - 2017.04.5
+ *  @version: 2.1 - 2017.04.5
  *  @author: ajp
  */
 

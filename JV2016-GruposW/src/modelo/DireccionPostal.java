@@ -1,10 +1,11 @@
-/** Proyecto: Juego de la vida.
- *  Implementa el concepto de direccion postal según el modelo 2.
- *  Se hace validación de datos pero no se gestionan todavía los errores correspondientes.
- *  @since: prototipo1.2
- *  @source: DireccionPostal.java 
- *  @version: 2.0 - 2017.02.20
- *  @author: ajp
+/** 
+ * Proyecto: Juego de la vida.
+ * Implementa el concepto de direccion postal según el modelo 2.
+ * Se hace validación de datos pero no se gestionan todavía los errores correspondientes.
+ * @since: prototipo1.2
+ * @source: DireccionPostal.java 
+ * @version: 2.1 - 2017.04.25
+ * @author: ajp
  */
 
 package modelo;
@@ -18,26 +19,28 @@ public class DireccionPostal implements Serializable, Cloneable {
 	private String numero;
 	private String cp;
 	private String poblacion;
-
-	public DireccionPostal(String calle, String numero, String cp, String poblacion) {
+	
+	public DireccionPostal(String calle, String numero, String cp, String poblacion) throws ModeloException {
 		setCalle(calle);
 		setNumero(numero);
 		setCP(cp);
 		setPoblacion(poblacion);
 	}
 
-	public DireccionPostal() {
+	public DireccionPostal() throws ModeloException {
 		this("Calle", "00", "99999", "Población");
 	}
-
-	public DireccionPostal(DireccionPostal direccion) {
-		this(direccion.calle, direccion.numero, direccion.cp, 
-				direccion.poblacion);
+	
+	public DireccionPostal(DireccionPostal direccion) throws ModeloException {
+		this(direccion.calle, direccion.numero, direccion.cp, direccion.poblacion);
 	}
 
-	public void setCalle(String calle) {
-		assert(calleValida(calle));
-		this.calle = calle;
+	public void setCalle(String calle) throws ModeloException {
+		if (calleValida(calle)) {
+			this.calle = calle;
+			return;
+		}
+		throw new ModeloException("El correo: " + calle + " no es válida...");		
 	}
 
 	/**
@@ -46,14 +49,10 @@ public class DireccionPostal implements Serializable, Cloneable {
 	 * @return true si cumple.
 	 */
 	private boolean calleValida(String calle) {
-		if (calle != null
-				&& util.Formato.validar(calle, Formato.PATRON_NOMBRE_VIA)
-				&& calleAutentica(calle)) {
-			return true;
-		}
-		return false;
+		assert calle != null;
+		return util.Formato.validar(calle, Formato.PATRON_NOMBRE_VIA) && calleAutentica(calle);
 	}
-
+	
 	/**
 	 * Comprueba que existe la calle.
 	 * @param calle.
@@ -64,33 +63,31 @@ public class DireccionPostal implements Serializable, Cloneable {
 		//--Pendiente--
 		return true;
 	}
-
-	public void setNumero(String numero) {
+	
+	public void setNumero(String numero) throws ModeloException {
 		if (numeroValido(numero)) {
 			this.numero = numero;
+			return;
 		}
-		else {
-			// ERROR -mejor con assert-
-		}
+		throw new ModeloException("El número: " + numero + " no es válido...");
 	}
-
+	
 	/**
 	 * Comprueba validez de la vía pública.
 	 * @param via.
 	 * @return true si cumple.
 	 */
 	private boolean numeroValido(String numero) {
-		if (numero != null
-				&& util.Formato.validar(numero, Formato.PATRON_NUMERO_POSTAL)) {
-			return true;
-		}
-		return false;
+		assert numero != null;
+		return util.Formato.validar(numero, Formato.PATRON_NUMERO_POSTAL);
 	}
-
-	public void setCP(String cp) {
-		assert(codigoPostalValido(cp));
+	
+	public void setCP(String cp) throws ModeloException {
+		if (codigoPostalValido(cp)) {
 		this.cp = cp;
-
+		return;
+		}
+		throw new ModeloException("El CP: " + cp + " no es válido...");	
 	}
 
 	/**
@@ -99,14 +96,11 @@ public class DireccionPostal implements Serializable, Cloneable {
 	 * @return true si cumple.
 	 */
 	private boolean codigoPostalValido(String codigoPostal) {
-		if (codigoPostal != null
-				&& util.Formato.validar(codigoPostal, Formato.PATRON_CP) 
-				&& codigoPostalAutentico(codigoPostal)) {
-			return true;
-		}
-		return false;
+		assert codigoPostal != null;
+		return util.Formato.validar(codigoPostal, Formato.PATRON_CP) 
+				&& codigoPostalAutentico(codigoPostal);
 	}
-
+	
 	/**
 	 * Comprueba que existe el código postal.
 	 * @param codigoPostal.
@@ -117,10 +111,13 @@ public class DireccionPostal implements Serializable, Cloneable {
 		//--Pendiente--
 		return true;
 	}
-
-	public void setPoblacion(String poblacion) {
-		assert poblacionValida(poblacion);
+	
+	public void setPoblacion(String poblacion) throws ModeloException {
+		if (poblacionValida(poblacion)) {
 		this.poblacion = poblacion;
+		return;
+		}
+		throw new ModeloException("La población: " + poblacion + " no es válida...");	
 	}
 
 	/**
@@ -129,14 +126,11 @@ public class DireccionPostal implements Serializable, Cloneable {
 	 * @return true si cumple.
 	 */
 	private boolean poblacionValida(String poblacion) {
-		if (poblacion != null
-				&& util.Formato.validar(poblacion, Formato.PATRON_TOPONIMO)
-				&& poblacionAutentica(poblacion)) {
-			return true;
-		}
-		return false;
+		assert poblacion != null;
+		return util.Formato.validar(poblacion, Formato.PATRON_TOPONIMO)
+				&& poblacionAutentica(poblacion);
 	}
-
+	
 	/**
 	 * Comprueba que existe la población.
 	 * @param poblacion.
@@ -148,15 +142,15 @@ public class DireccionPostal implements Serializable, Cloneable {
 		return true;
 	}
 
-	public String getCodigoPostal() {
-		return calle;
+	public String getCP() {
+		return cp;
 	}
 
 	public String getCalle() {
 		return calle;
 	}
 
-
+	
 	public String getNumero() {
 		return numero;
 	}
@@ -202,7 +196,7 @@ public class DireccionPostal implements Serializable, Cloneable {
 	 * Son de la misma clase.
 	 * Tienen los mismos valores en los atributos; o son el mismo objeto.
 	 * @return falso si no cumple las condiciones.
-	 */
+	*/
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null && getClass() == obj.getClass()) {
@@ -219,15 +213,20 @@ public class DireccionPostal implements Serializable, Cloneable {
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Genera un clon del propio objeto realizando una copia profunda.
 	 * @return el objeto clonado.
-	 */
+	*/
 	@Override
-	public Object clone() {
+	public DireccionPostal clone() {
 		// Utiliza el constructor copia.
-		return new DireccionPostal(this);
+		DireccionPostal clon = null;
+		try {
+			clon = new DireccionPostal(this);
+		} 
+		catch (ModeloException e) { }
+		return clon;
 	}
-
+	
 } // class

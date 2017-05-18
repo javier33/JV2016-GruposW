@@ -1,37 +1,54 @@
 /** 
  * Proyecto: Juego de la vida.
- * Resuelve todos los aspectos del almacenamiento del DTO Patron utilizando un ArrayList.
+ * Resuelve todos los aspectos del almacenamiento del DTO Patron 
+ * utilizando un ArrayList persistente en fichero.
  * Colabora en el patron Fachada.
  * @since: prototipo2.0
  * @source: PatronesDAO.java 
- * @version: 2.1 - 2017/04/03
+ * @version: 2.1 - 2017.04.09 
  * @author: ajp
  */
 
-package accesoDatos.memoria;
+package accesoDatos.fichero;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import accesoDatos.DatosException;
 import accesoDatos.OperacionesDAO;
+import config.Configuracion;
 import modelo.ModeloException;
 import modelo.Patron;
 
-public class PatronesDAO implements OperacionesDAO {
+public class PatronesDAO implements OperacionesDAO, Persistente {
 
 	// Requerido por el Singleton 
 	private static PatronesDAO instancia = null;
-	
+
 	// Elemento de almacenamiento. 
 	private static ArrayList<Patron> datosPatrones;
-	
+	private static File fPatrones;
+
 	/**
 	 * Constructor por defecto de uso interno.
 	 * Sólo se ejecutará una vez.
 	 */
 	private PatronesDAO() {
 		datosPatrones = new ArrayList<Patron>();
-		cargarPredeterminados();
+		fPatrones = new File(Configuracion.get().getProperty("patrones.nombreFichero"));
+		try {
+			recuperarDatos();
+		} catch (DatosException e) {
+			if (e.getMessage().equals("El fichero de datos: " + fPatrones.getName() + " no existe...")) {	
+				cargarPredeterminados();
+			}
+		}
 	}
 
 	/**
@@ -47,7 +64,7 @@ public class PatronesDAO implements OperacionesDAO {
 		}
 		return instancia;
 	}
-	
+
 	/**
 	 *  Método para generar datos predeterminados.
 	 */
@@ -67,16 +84,60 @@ public class PatronesDAO implements OperacionesDAO {
 			e.printStackTrace();
 		}
 		datosPatrones.add(patronDemo);
+		guardarDatos(datosPatrones);
 	}
-	
+
+	//OPERACIONES DE PERSISTENCIA.
+	/**
+	 *  Recupera el Arraylist datosPatrones almacenados en fichero. 
+	 * @throws DatosException 
+	 */
+	@Override
+	public void recuperarDatos() throws DatosException {
+		try {
+			if (fPatrones.exists()) {
+				FileInputStream fisPatrones = new FileInputStream(fPatrones);
+				ObjectInputStream oisPatrones = new ObjectInputStream(fisPatrones);
+				datosPatrones = (ArrayList<Patron>) oisPatrones.readObject();
+				oisPatrones.close();
+				return;
+			}
+			throw new DatosException("El fichero de datos: " + fPatrones.getName() + " no existe...");
+		} 
+		catch (ClassNotFoundException e) {}
+		catch (IOException e) {}
+	}
+
 	/**
 	 *  Cierra datos.
 	 */
 	@Override
 	public void cerrar() {
-		// Nada que hacer si no hay persistencia.
+		guardarDatos();
 	}
-	
+
+	/**
+	 *  Guarda el Arraylist de Patrones en fichero.
+	 */
+	@Override
+	public void guardarDatos() {
+		guardarDatos(datosPatrones);
+	}
+
+	/**
+	 *  Guarda la lista recibida en el fichero de datos.
+	 */
+	private void guardarDatos(List<Patron> listaPatrones) {
+		try {
+			FileOutputStream fosPatrones = new FileOutputStream(fPatrones);
+			ObjectOutputStream oosPatrones = new ObjectOutputStream(fosPatrones);
+			oosPatrones.writeObject(datosPatrones);		
+			oosPatrones.flush();
+			oosPatrones.close();
+		} 
+		catch (IOException e) {}	
+	}
+
 	//OPERACIONES DAO
 	/**
 	 * Búsqueda binaria de un Patron dado su nombre.
@@ -93,7 +154,7 @@ public class PatronesDAO implements OperacionesDAO {
 		}
 		return null;
 	}
-	
+
 	/**
 	 *  Obtiene por búsqueda binaria, la posición que ocupa, o ocuparía,  un Patron en 
 	 *  la estructura.
@@ -121,7 +182,7 @@ public class PatronesDAO implements OperacionesDAO {
 		}	
 		return -(inicio + 1);					// Posición que ocuparía -negativo- base 1
 	}
-	
+
 	/**
 	 * Búsqueda de Patron dado un objeto, reenvía al método que utiliza nombre.
 	 * @param obj - el Patron a buscar.
@@ -131,7 +192,7 @@ public class PatronesDAO implements OperacionesDAO {
 	public Patron obtener(Object obj)  {
 		return this.obtener(((Patron) obj).getNombre());
 	}
-	
+
 	/**
 	 *  Alta de un nuevo Patron en orden y sin repeticiones según el campo nombre. 
 	 *  Busca previamente la posición que le corresponde por búsqueda binaria.
@@ -165,7 +226,7 @@ public class PatronesDAO implements OperacionesDAO {
 		}
 		throw new DatosException("(BAJA) El Patron: " + nombre + " no existe...");
 	}
-	
+
 	/**
 	 *  Actualiza datos de un Mundo reemplazando el almacenado por el recibido.
 	 *	@param obj - Patron con las modificaciones.
@@ -207,5 +268,5 @@ public class PatronesDAO implements OperacionesDAO {
 		datosPatrones = new ArrayList<Patron>();
 		cargarPredeterminados();
 	}
-	
+
 } //class

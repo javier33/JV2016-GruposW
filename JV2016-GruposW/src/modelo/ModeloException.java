@@ -3,7 +3,7 @@
  * Maneja los errores de las clases del modelo.
  *  @since: prototipo2.1
  *  @source: ModeloException.java 
- * @version: 2.1 - 2017.04.5
+ * @version: 2.1 - 2017.04.05
  *  @author: ajp
  */
 
