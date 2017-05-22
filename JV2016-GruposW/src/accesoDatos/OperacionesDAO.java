@@ -9,6 +9,8 @@
 
 package accesoDatos;
 
+import java.util.List;
+
 public interface OperacionesDAO {
 
 	/**
@@ -25,6 +27,13 @@ public interface OperacionesDAO {
 	 * @return - el Object encontrado; null si no existe.
 	 */
 	Object obtener(Object obj);
+	
+	/**
+	 * Obtiene todos los objeto del mismo tipo.
+	 * @return - la List con los objetos encontrados.
+	 */
+	@SuppressWarnings("rawtypes")
+	List obtenerTodos();
 	
 	/**
 	 *  Alta de un objeto en el almacén de datos, 
@@ -54,6 +63,12 @@ public interface OperacionesDAO {
 	 * @return el texto con el volcado de datos.
 	 */
 	String listarDatos();
+	
+	/**
+	 * Obtiene el listado de todos los identificadores almacenados.
+	 * @return el texto con el volcado de datos.
+	 */
+	String listarId();
 	
 	/**
 	 *  Cierra datos.

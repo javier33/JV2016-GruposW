@@ -9,7 +9,7 @@
 
 import accesoDatos.Datos;
 import accesoDatos.test.DatosPrueba;
-import accesoUsr.control.ControlMenuPrincipal;
+import accesoUsr.control.ControlPrincipal;
 
 public class JVPrincipal {
 
@@ -23,10 +23,10 @@ public class JVPrincipal {
 		//System.out.println(fachada.toStringIdSimulaciones());
 		
 		if (args.length == 0) { 
-			new ControlMenuPrincipal();
+			new ControlPrincipal();
 		}	
 		else {
-			new ControlMenuPrincipal(args[0]);
+			new ControlPrincipal(args[0]);
 		}	
 	}
 	

@@ -1,8 +1,8 @@
 /** Proyecto: Juego de la vida.
  *  Resuelve todos los aspectos relacionados con el control 
- *  del menú principal del programa. Colabora en el patron MVC
+ *  principal del programa con un menú. Colabora en el patron MVC
  *  @since: prototipo2.1
- *  @source: ControlMenuPrincipal.java 
+ *  @source: ControlPrincipal.java 
  *  @version: 2.1 - 2017.05.17
  *  @author: ajp
  */
@@ -12,27 +12,27 @@ package accesoUsr.control;
 import java.util.ArrayList;
 
 import accesoDatos.Datos;
-import accesoUsr.consola.VistaMenuPrincipal;
+import accesoUsr.consola.VistaPrincipal;
 import modelo.SesionUsuario;
 import modelo.Simulacion;
 
-public class ControlMenuPrincipal {
+public class ControlPrincipal {
 
-	private VistaMenuPrincipal vistaMenu;
+	private VistaPrincipal vistaMenu;
 	private SesionUsuario sesionUsr;
 	private Datos fachada;
 
-	public ControlMenuPrincipal(String idUsr) {
+	public ControlPrincipal(String idUsr) {
 		initMenuPrincipal(idUsr);	
 	}
 
-	public ControlMenuPrincipal() {
+	public ControlPrincipal() {
 		this(null);
 	}
 
 	private void initMenuPrincipal(String idUsr) {
 		fachada = new Datos();
-		vistaMenu = new VistaMenuPrincipal();
+		vistaMenu = new VistaPrincipal();
 		this.sesionUsr = new ControlSesion(idUsr).getSesion();
 		secuenciaPrincipal();
 	}
@@ -62,10 +62,10 @@ public class ControlMenuPrincipal {
 			eliminarSimulacion();
 			break;
 		case 4:
-			MostrarSimulaciones();
+			mostrarSimulaciones();
 			break;
 		case 5:
-			MostrarIdSimulaciones();
+			mostrarIdSimulaciones();
 			break;
 		case 6:
 			ejecutarDemoSimulacion();
@@ -82,7 +82,7 @@ public class ControlMenuPrincipal {
 			eliminarMundo();
 			break;
 		case 10:
-			MostrarMundos();
+			mostrarMundos();
 			break;
 		
 		// Usuarios
@@ -96,7 +96,7 @@ public class ControlMenuPrincipal {
 			eliminarUsuario();
 			break;
 		case 14:
-			MostrarUsuarios();
+			mostrarUsuarios();
 			break;
 		
 		// Sesiones
@@ -140,12 +140,12 @@ public class ControlMenuPrincipal {
 		
 	}
 	
-	private void MostrarSimulaciones() {
+	private void mostrarSimulaciones() {
 		vistaMenu.mostrarMensaje("Opción no disponible...");
 		
 	}
 	
-	private void MostrarIdSimulaciones() {
+	private void mostrarIdSimulaciones() {
 		vistaMenu.mostrarMensaje("Opción no disponible...");
 		
 	}
@@ -173,7 +173,7 @@ public class ControlMenuPrincipal {
 		
 	}
 	
-	private void MostrarMundos() {
+	private void mostrarMundos() {
 		vistaMenu.mostrarMensaje("Opción no disponible...");
 		
 	}
@@ -194,7 +194,7 @@ public class ControlMenuPrincipal {
 		
 	}
 	
-	private void MostrarUsuarios() {
+	private void mostrarUsuarios() {
 		vistaMenu.mostrarMensaje("Opción no disponible...");
 		
 	}

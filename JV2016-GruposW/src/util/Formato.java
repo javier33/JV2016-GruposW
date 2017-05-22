@@ -57,8 +57,8 @@ public class Formato {
 	public static final String PATRON_TOPONIMO = "^[A-ZÑ][áéíóúña-z \\w]+";
 	public static final String PATRON_NOMBRE_VIA = "^[A-ZÑ][/áéíóúña-z \\w]+";
 	
-	public static final String PATRON_NOMBRE_MUNDO_JV = "^[A-ZÑ][áéíóúña-z \\w]+";
-	public static final String PATRON_NOMBRE_PATRON_JV = "^[A-ZÑ][áéíóúña-z \\w]+";
+	public static final String PATRON_NOMBRE_MUNDO_JV = "^[A-ZÑ][A-ZÑáéíóúña-z \\d]+";
+	public static final String PATRON_NOMBRE_PATRON_JV = "^[A-ZÑ][A-ZÑáéíóúña-z \\d]+";
 	
 	/**
 	 * Verifica que un texto tiene un formato válido.
