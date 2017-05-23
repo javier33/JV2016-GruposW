@@ -8,7 +8,7 @@
 
 package accesoUsr;
 
-public interface OperacionesVistaSesion {
+public interface OperacionesVistaSesion extends OperacionesVista {
 
 	/** 
     *  Para interactuar con el usuario y que introduzca su identificador. 
@@ -21,10 +21,5 @@ public interface OperacionesVistaSesion {
 	 * @return Devuelve el texto de la contraseña.
 	 */
 	String pedirClaveAcceso();
-
-	/**
-	 *  Muestra un mensaje en el interfaz de usuario con el texto recibido.
-	 */
-	void mostrarMensaje(String mensaje);
 
 } // Interface
