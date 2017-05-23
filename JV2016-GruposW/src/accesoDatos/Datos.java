@@ -106,6 +106,10 @@ public class Datos {
 		return usuariosDAO.listarDatos();
 	}
 
+	public String toStringIdUsuarios() {
+		return usuariosDAO.listarId();
+	}
+	
 	/**
 	 * Metodo fachada para eliminar todos
 	 * los usuarios.  
@@ -273,7 +277,7 @@ public class Datos {
 	 * @return - el texto.
 	 */
 	public String toStringIdSimulaciones() {
-		return simulacionesDAO.listarIdSimulaciones();
+		return simulacionesDAO.listarId();
 	}
 	
 	/**
@@ -347,6 +351,16 @@ public class Datos {
 	}
 
 	/**
+	 * Metodo fachada para obtener listado de todos
+	 * los identificadores de mundos.  
+	 * Reenvia petición al método DAO específico.
+	 * @return - el texto.
+	 */
+	public String toStringIdMundos() {
+		return mundosDAO.listarId();
+	}
+	
+	/**
 	 * Metodo fachada para eliminar todos
 	 * los mundos.  
 	 * Reenvia petición al método DAO específico.
@@ -416,6 +430,16 @@ public class Datos {
 		return patronesDAO.listarDatos();
 	}
 
+	/**
+	 * Metodo fachada para obtener listado de todos
+	 * los identificadores de patrones.  
+	 * Reenvia petición al método DAO específico.
+	 * @return - el texto.
+	 */
+	public String toStringIdPatrones() {
+		return patronesDAO.listarId();
+	}
+	
 	/**
 	 * Metodo fachada para eliminar todos
 	 * los patrones.  
