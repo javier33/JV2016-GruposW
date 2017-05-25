@@ -32,8 +32,8 @@ public class PatronesDAO implements OperacionesDAO, Persistente {
 	private static PatronesDAO instancia = null;
 
 	// Elemento de almacenamiento. 
-	private static ArrayList<Patron> datosPatrones;
-	private static File fPatrones;
+	private ArrayList<Patron> datosPatrones;
+	private File fPatrones;
 
 	/**
 	 * Constructor por defecto de uso interno.
@@ -78,7 +78,7 @@ public class PatronesDAO implements OperacionesDAO, Persistente {
 		};
 		Patron patronDemo = null;
 		try {
-			patronDemo = new Patron("PatronDemo", esquemaDemo);
+			patronDemo = new Patron("Demo0", esquemaDemo);
 		} 
 		catch (ModeloException e) {
 			e.printStackTrace();
@@ -154,7 +154,7 @@ public class PatronesDAO implements OperacionesDAO, Persistente {
 		}
 		return null;
 	}
-
+	
 	/**
 	 *  Obtiene por búsqueda binaria, la posición que ocupa, o ocuparía,  un Patron en 
 	 *  la estructura.
@@ -182,7 +182,7 @@ public class PatronesDAO implements OperacionesDAO, Persistente {
 		}	
 		return -(inicio + 1);					// Posición que ocuparía -negativo- base 1
 	}
-
+	
 	/**
 	 * Búsqueda de Patron dado un objeto, reenvía al método que utiliza nombre.
 	 * @param obj - el Patron a buscar.
@@ -192,7 +192,16 @@ public class PatronesDAO implements OperacionesDAO, Persistente {
 	public Patron obtener(Object obj)  {
 		return this.obtener(((Patron) obj).getNombre());
 	}
-
+	
+	/**
+	 * Obtiene todos los objetos Patron almacenados.
+	 * @return - la List con todos los patrones.
+	 */
+	@Override
+	public List<Patron> obtenerTodos() {
+		return datosPatrones;
+	}
+	
 	/**
 	 *  Alta de un nuevo Patron en orden y sin repeticiones según el campo nombre. 
 	 *  Busca previamente la posición que le corresponde por búsqueda binaria.
@@ -226,7 +235,7 @@ public class PatronesDAO implements OperacionesDAO, Persistente {
 		}
 		throw new DatosException("(BAJA) El Patron: " + nombre + " no existe...");
 	}
-
+	
 	/**
 	 *  Actualiza datos de un Mundo reemplazando el almacenado por el recibido.
 	 *	@param obj - Patron con las modificaciones.
@@ -253,13 +262,26 @@ public class PatronesDAO implements OperacionesDAO, Persistente {
 	public String listarDatos() {
 		StringBuilder listado = new StringBuilder();
 		for (Patron patron: datosPatrones) {
-			if (patron != null) {
-				listado.append("\n" + patron); 
-			}
+			listado.append("\n" + patron); 
 		}
 		return listado.toString();
 	}
 
+	/**
+	 * Obtiene el listado de todos identificadores de los objetos Patron almacenados.
+	 * @return el texto con el volcado de datos.
+	 */
+	@Override
+	public String listarId() {
+		StringBuilder listado = new StringBuilder();
+		for (Patron patron: datosPatrones) {
+			if (patron != null) {
+				listado.append("\n" + patron.hashCode()); 
+			}
+		}
+		return listado.toString();
+	}
+	
 	/**
 	 * Elimina todos los patrones almacenados y regenera el demo predeterminado.
 	 */
@@ -268,5 +290,5 @@ public class PatronesDAO implements OperacionesDAO, Persistente {
 		datosPatrones = new ArrayList<Patron>();
 		cargarPredeterminados();
 	}
-
+	
 } //class

@@ -60,14 +60,10 @@ public class DatosTest {
 					"Márquez Alón", new DireccionPostal("Alta", "10", "30012", "Murcia"), 
 					new Correo("pepe@gmail.com"), new Fecha(1990, 11, 12), 
 					new Fecha(2014, 12, 3), new ClaveAcceso("Miau#32"), RolUsuario.NORMAL);
-
 			sesionPrueba = new SesionUsuario(fachada.obtenerUsuario("III1R"), new Fecha(), EstadoSesion.EN_PREPARACION);
-
-			mundoPrueba = fachada.obtenerMundo("MundoDemo");
-
+			mundoPrueba = fachada.obtenerMundo("Demo0");
 			simulacionPrueba = new Simulacion(fachada.obtenerUsuario("III1R"), new Fecha(), new Mundo(), EstadoSimulacion.PREPARADA);
-
-			patronPrueba = fachada.obtenerPatron("PatronDemo");
+			patronPrueba = fachada.obtenerPatron("Demo0");
 		} 
 		catch (ModeloException e) {
 			e.printStackTrace();

@@ -13,6 +13,7 @@ package accesoDatos.memoria;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 import accesoDatos.DatosException;
@@ -33,8 +34,8 @@ public class UsuariosDAO  implements OperacionesDAO {
 	private static UsuariosDAO instancia = null;
 
 	// Elementos de almacenamiento.
-	private static ArrayList<Usuario> datosUsuarios;
-	private static Map<String,String> equivalenciasId;
+	private ArrayList<Usuario> datosUsuarios;
+	private Map<String,String> equivalenciasId;
 
 	/**
 	 * Constructor por defecto de uso interno.
@@ -149,7 +150,15 @@ public class UsuariosDAO  implements OperacionesDAO {
 	public Usuario obtener(Object obj)  {
 		return this.obtener(((Usuario) obj).getIdUsr());
 	}	
-
+	/**
+	 * Obtiene todos los objetos Usuario almacenados.
+	 * @return - la List con todos los usuarios.
+	 */
+	@Override
+	public List<Usuario> obtenerTodos() {
+		return datosUsuarios;
+	}
+	
 	/**
 	 *  Alta de un nuevo usuario en orden y sin repeticiones según el campo idUsr. 
 	 *  Localiza previamente la posición de inserción, en orden, que le corresponde.
@@ -254,13 +263,26 @@ public class UsuariosDAO  implements OperacionesDAO {
 	public String listarDatos() {
 		StringBuilder listado = new StringBuilder();
 		for (Usuario usuario: datosUsuarios) {
-			if (usuario != null) {
-				listado.append("\n" + usuario); 
-			}
+			listado.append("\n" + usuario); 
 		}
 		return listado.toString();
 	}
 
+	/**
+	 * Obtiene el listado de todos los identificadores de los usuarios almacenados.
+	 * @return el texto con el volcado de datos.
+	 */
+	@Override
+	public String listarId() {
+		StringBuilder listado = new StringBuilder();
+		for (Usuario usuario: datosUsuarios) {
+			if (usuario != null) {
+				listado.append("\n" + usuario.getIdUsr()); 
+			}
+		}
+		return listado.toString();
+	}
+	
 	/**
 	 * Elimina todos los usuarios almacenados y regenera los predeterminados.
 	 */

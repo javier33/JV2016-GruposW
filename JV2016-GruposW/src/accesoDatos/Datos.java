@@ -11,7 +11,7 @@ package accesoDatos;
 
 import java.util.List;
 
-import accesoDatos.fichero.*;
+import accesoDatos.db4o.*;
 import modelo.*;
 
 public class Datos {
@@ -187,7 +187,7 @@ public class Datos {
 	 * @return - el texto.
 	 */
 	public String toStringIdSesiones() {
-		return sesionesDAO.listarIdSesiones();
+		return sesionesDAO.listarId();
 	}
 	
 	/**
