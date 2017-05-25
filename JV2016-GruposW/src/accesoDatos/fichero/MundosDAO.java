@@ -35,8 +35,8 @@ public class MundosDAO implements OperacionesDAO, Persistente {
 	private static MundosDAO instancia;
 
 	// Elementos de almacenamiento.
-	private static ArrayList<Mundo> datosMundos;
-	private static File fMundos;
+	private ArrayList<Mundo> datosMundos;
+	private File fMundos;
 
 	/**
 	 * Constructor por defecto de uso interno.
@@ -87,15 +87,17 @@ public class MundosDAO implements OperacionesDAO, Persistente {
 			{ 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 1x Flip-Flop
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }  // 1x Still Life
 		};
-		Mundo mundoDemo = null;
+		String NombreDemo = Configuracion.get().getProperty("mundo.demo");
+		ArrayList<Integer> constantesDemo = new ArrayList<Integer>();
+		Hashtable<Patron,Posicion> mapaDemo = new Hashtable<Patron,Posicion>();
 		try {
-			mundoDemo = new Mundo("MundoDemo", new ArrayList<Integer>(), new Hashtable<Patron,Posicion>(), espacioDemo);
+			Mundo mundoDemo = new Mundo(NombreDemo, constantesDemo, mapaDemo , espacioDemo);
+			datosMundos.add(mundoDemo);
+			guardarDatos(datosMundos);
 		} 
 		catch (ModeloException e) {
 			e.printStackTrace();
 		}
-		datosMundos.add(mundoDemo);
-		guardarDatos(datosMundos);
 	}
 
 	//OPERACIONES DE PERSISTENCIA.
@@ -205,6 +207,15 @@ public class MundosDAO implements OperacionesDAO, Persistente {
 	}
 
 	/**
+	 * Obtiene todos los objetos Mundo almacenados.
+	 * @return - la List con todos los mundos.
+	 */
+	@Override
+	public List<Mundo> obtenerTodos() {
+		return datosMundos;
+	}
+	
+	/**
 	 *  Alta de un objeto en el almacén de datos, 
 	 *  sin repeticiones, según el campo id previsto. 
 	 *	@param obj - Objeto a almacenar.
@@ -264,13 +275,24 @@ public class MundosDAO implements OperacionesDAO, Persistente {
 	public String listarDatos() {
 		StringBuilder listado = new StringBuilder();
 		for (Mundo mundo: datosMundos) {
-			if (mundo != null) {
-				listado.append("\n" + mundo);
-			}
+			listado.append("\n" + mundo);
 		}
 		return listado.toString();
 	}
 
+	/**
+	 * Obtiene el listado de todos identificadores de los objetos Mundo almacenados.
+	 * @return el texto con el volcado de datos.
+	 */
+	@Override
+	public String listarId() {
+		StringBuilder listado = new StringBuilder();
+		for (Mundo mundo: datosMundos) {
+			listado.append("\n" + mundo.getNombre());
+		}
+		return listado.toString();
+	}
+	
 	/**
 	 * Elimina todos los mundos almacenados y regenera el demo predeterminado.
 	 */

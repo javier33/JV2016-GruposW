@@ -25,7 +25,7 @@ public class SesionesDAO implements OperacionesDAO {
 	private static SesionesDAO instancia = null;
 
 	// Elemento de almacenamiento. 
-	private static ArrayList<SesionUsuario> datosSesiones;
+	private ArrayList<SesionUsuario> datosSesiones;
 
 	/**
 	 * Constructor por defecto de uso interno.
@@ -112,6 +112,15 @@ public class SesionesDAO implements OperacionesDAO {
 		return this.obtener(((SesionUsuario) obj).getIdSesion());
 	}	
 
+	/**
+	 * Obtiene todos los objetos SesionUsuario almacenados.
+	 * @return - la List con todas las sesiones.
+	 */
+	@Override
+	public List<SesionUsuario> obtenerTodos() {
+		return datosSesiones;
+	}
+	
 	/**
 	 * Búsqueda de todas la sesiones de un mismo usuario.
 	 * @param idUsr - el identificador de usuario a buscar.
@@ -207,18 +216,17 @@ public class SesionesDAO implements OperacionesDAO {
 	public String listarDatos() {
 		StringBuilder listado = new StringBuilder();
 		for (SesionUsuario sesion: datosSesiones) {
-			if (sesion != null) {
-				listado.append("\n" + sesion);
-			}
+			listado.append("\n" + sesion);
 		}
 		return listado.toString();
 	}
-	
+
 	/**
 	 * Obtiene el listado de todos los identificadores de las sesiones almacenadas.
 	 * @return el texto con los identificadores.
 	 */
-	public String listarIdSesiones() {
+	@Override
+	public String listarId() {
 		StringBuilder listado = new StringBuilder();
 		for (SesionUsuario sesion: datosSesiones) {
 			if (sesion != null) {
@@ -228,13 +236,12 @@ public class SesionesDAO implements OperacionesDAO {
 		return listado.toString();
 	}
 
-
 	/**
 	 * Elimina todos las sesiones almacenadas.
 	 */
 	@Override
 	public void borrarTodo() {
-		datosSesiones = new ArrayList<SesionUsuario>();	
+		datosSesiones = new ArrayList<SesionUsuario>();
 	}
 
 }//class

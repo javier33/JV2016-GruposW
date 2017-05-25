@@ -14,6 +14,7 @@ import java.util.Hashtable;
 import util.Fecha;
 import accesoDatos.Datos;
 import accesoDatos.DatosException;
+import config.Configuracion;
 import modelo.ClaveAcceso;
 import modelo.Correo;
 import modelo.DireccionPostal;
@@ -38,7 +39,6 @@ public class DatosPrueba {
 	 */
 	public static void cargarDatosPrueba() {
 		cargarUsuariosPrueba();
-		cargarSesionesPrueba();
 		cargarMundosPrueba();
 		cargarSimulacionesPrueba();
 		cargarPatronesPrueba();	
@@ -77,33 +77,12 @@ public class DatosPrueba {
 	}
 
 	/**
-	 * Genera dos sesiones de prueba válidas, asociadas los usuarios predeterminados.
-	 */
-	private static void cargarSesionesPrueba() {
-		Usuario usrPrueba1 = fachada.obtenerUsuario("AAA0T");
-		Usuario usrPrueba2 = fachada.obtenerUsuario("III1R");
-		Fecha fechaPrueba1 = new Fecha();
-		Fecha fechaPrueba2 = new Fecha();
-		fechaPrueba2.addSegundos(1);		
-		try {
-			fachada.altaSesion(new SesionUsuario(usrPrueba1, fechaPrueba1, EstadoSesion.CERRADA));
-			fachada.altaSesion(new SesionUsuario(usrPrueba2, fechaPrueba1, EstadoSesion.CERRADA));
-			fachada.altaSesion(new SesionUsuario(usrPrueba1, fechaPrueba2, EstadoSesion.CERRADA));
-			fachada.altaSesion(new SesionUsuario(usrPrueba2, fechaPrueba2, EstadoSesion.CERRADA));
-
-		} 
-		catch (DatosException | ModeloException e) { 
-			e.printStackTrace();		
-		}
-	}
-
-	/**
 	 * Genera dos Simulaciones de prueba válidas, asociada al Usuario invitado predeterminado 
 	 * con una configuración de Mundo predetermindo.
 	 */
 	private static void cargarSimulacionesPrueba() {
 		Usuario usrPrueba = fachada.obtenerUsuario("III1R");
-		Mundo mundoPrueba = fachada.obtenerMundo("MundoDemo");
+		Mundo mundoPrueba = fachada.obtenerMundo(Configuracion.get().getProperty("mundo.demo"));
 		Fecha fechaPrueba1 = new Fecha();
 		Fecha fechaPrueba2 = new Fecha();
 		Fecha fechaPrueba3 = new Fecha();

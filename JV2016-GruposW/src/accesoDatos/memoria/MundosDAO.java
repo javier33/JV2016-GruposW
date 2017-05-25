@@ -12,9 +12,11 @@ package accesoDatos.memoria;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import accesoDatos.DatosException;
 import accesoDatos.OperacionesDAO;
+import config.Configuracion;
 import modelo.ModeloException;
 import modelo.Mundo;
 import modelo.Patron;
@@ -26,7 +28,7 @@ public class MundosDAO implements OperacionesDAO {
 	private static MundosDAO instancia;
 
 	// Elementos de almacenamiento.
-	private static ArrayList<Mundo> datosMundos;
+	private ArrayList<Mundo> datosMundos;
 
 	/**
 	 * Constructor por defecto de uso interno.
@@ -70,14 +72,16 @@ public class MundosDAO implements OperacionesDAO {
 			{ 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 1x Flip-Flop
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }  // 1x Still Life
 		};
-		Mundo mundoDemo = null;
+		String NombreDemo = Configuracion.get().getProperty("mundo.demo");
+		ArrayList<Integer> constantesDemo = new ArrayList<Integer>();
+		Hashtable<Patron,Posicion> mapaDemo = new Hashtable<Patron,Posicion>();
 		try {
-			mundoDemo = new Mundo("MundoDemo", new ArrayList<Integer>(), new Hashtable<Patron,Posicion>(), espacioDemo);
+			Mundo mundoDemo = new Mundo(NombreDemo, constantesDemo, mapaDemo , espacioDemo);
+			datosMundos.add(mundoDemo);
 		} 
 		catch (ModeloException e) {
 			e.printStackTrace();
 		}
-		datosMundos.add(mundoDemo);
 	}
 	
 	/**
@@ -141,6 +145,15 @@ public class MundosDAO implements OperacionesDAO {
 	@Override
 	public Mundo obtener(Object obj)  {
 		return this.obtener(((Mundo) obj).getNombre());
+	}
+	
+	/**
+	 * Obtiene todos los objetos Mundo almacenados.
+	 * @return - la List con todos los mundos.
+	 */
+	@Override
+	public List<Mundo> obtenerTodos() {
+		return datosMundos;
 	}
 	
 	/**
@@ -210,6 +223,19 @@ public class MundosDAO implements OperacionesDAO {
 		return listado.toString();
 	}
 
+	/**
+	 * Obtiene el listado de todos identificadores de los objetos Mundo almacenados.
+	 * @return el texto con el volcado de datos.
+	 */
+	@Override
+	public String listarId() {
+		StringBuilder listado = new StringBuilder();
+		for (Mundo mundo: datosMundos) {
+			listado.append("\n" + mundo.getNombre());
+		}
+		return listado.toString();
+	}
+	
 	/**
 	 * Elimina todos los mundos almacenados y regenera el demo predeterminado.
 	 */

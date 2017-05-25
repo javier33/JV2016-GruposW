@@ -27,7 +27,7 @@ public class SimulacionesDAO implements OperacionesDAO {
 	private static SimulacionesDAO instancia;
 
 	// Elemento de almacenamiento.
-	private static ArrayList<Simulacion> datosSimulaciones;
+	private ArrayList<Simulacion> datosSimulaciones;
 
 	/**
 	 * Constructor por defecto de uso interno.
@@ -58,7 +58,7 @@ public class SimulacionesDAO implements OperacionesDAO {
 	private void cargarPredeterminados() {
 		// Obtiene usuario (invitado) y mundo predeterminados.
 		Usuario usrDemo = UsuariosDAO.getInstancia().obtener("III1R");
-		Mundo mundoDemo = MundosDAO.getInstancia().obtener("MundoDemo");
+		Mundo mundoDemo = MundosDAO.getInstancia().obtener("Demo0");
 		Simulacion simulacionDemo = null;
 		try {
 			simulacionDemo = new Simulacion(usrDemo, new Fecha(), mundoDemo, EstadoSimulacion.PREPARADA);
@@ -130,6 +130,15 @@ public class SimulacionesDAO implements OperacionesDAO {
 		return this.obtener(((Simulacion) obj).getIdSimulacion());
 	}
 
+	/**
+	 * Obtiene todos los objetos Simulacion almacenados.
+	 * @return - la List con todos las simulaciones.
+	 */
+	@Override
+	public List<Simulacion> obtenerTodos() {
+		return datosSimulaciones;
+	}
+	
 	/**
 	 * Búsqueda de todas la simulaciones de un usuario.
 	 * @param idUsr - el identificador de usuario a buscar.
@@ -223,9 +232,7 @@ public class SimulacionesDAO implements OperacionesDAO {
 	public String listarDatos() {
 		StringBuilder listado = new StringBuilder();
 		for (Simulacion simulacion: datosSimulaciones) {
-			if (simulacion != null) {
-				listado.append("\n" + simulacion);
-			}
+			listado.append("\n" + simulacion);
 		}
 		return listado.toString();
 	}
@@ -234,7 +241,8 @@ public class SimulacionesDAO implements OperacionesDAO {
 	 * Obtiene el listado de todos los identificadres de las simulaciones almacenadas.
 	 * @return el texto con los identificadores.
 	 */
-	public String listarIdSimulaciones() {
+	@Override
+	public String listarId() {
 		StringBuilder listado = new StringBuilder();
 		for (Simulacion simulacion: datosSimulaciones) {
 			if (simulacion != null) {
@@ -249,7 +257,8 @@ public class SimulacionesDAO implements OperacionesDAO {
 	 */
 	@Override
 	public void borrarTodo() {
-		instancia = null;
+		datosSimulaciones = new ArrayList<Simulacion>();
+		cargarPredeterminados();
 	}
 
 } //class

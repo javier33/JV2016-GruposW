@@ -11,6 +11,7 @@
 package accesoDatos.memoria;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import accesoDatos.DatosException;
 import accesoDatos.OperacionesDAO;
@@ -23,7 +24,7 @@ public class PatronesDAO implements OperacionesDAO {
 	private static PatronesDAO instancia = null;
 	
 	// Elemento de almacenamiento. 
-	private static ArrayList<Patron> datosPatrones;
+	private ArrayList<Patron> datosPatrones;
 	
 	/**
 	 * Constructor por defecto de uso interno.
@@ -61,7 +62,7 @@ public class PatronesDAO implements OperacionesDAO {
 		};
 		Patron patronDemo = null;
 		try {
-			patronDemo = new Patron("PatronDemo", esquemaDemo);
+			patronDemo = new Patron("Demo0", esquemaDemo);
 		} 
 		catch (ModeloException e) {
 			e.printStackTrace();
@@ -133,6 +134,15 @@ public class PatronesDAO implements OperacionesDAO {
 	}
 	
 	/**
+	 * Obtiene todos los objetos Patron almacenados.
+	 * @return - la List con todos los patrones.
+	 */
+	@Override
+	public List<Patron> obtenerTodos() {
+		return datosPatrones;
+	}
+	
+	/**
 	 *  Alta de un nuevo Patron en orden y sin repeticiones según el campo nombre. 
 	 *  Busca previamente la posición que le corresponde por búsqueda binaria.
 	 * @param obj - Patron a almacenar.
@@ -192,13 +202,26 @@ public class PatronesDAO implements OperacionesDAO {
 	public String listarDatos() {
 		StringBuilder listado = new StringBuilder();
 		for (Patron patron: datosPatrones) {
-			if (patron != null) {
-				listado.append("\n" + patron); 
-			}
+			listado.append("\n" + patron); 
 		}
 		return listado.toString();
 	}
 
+	/**
+	 * Obtiene el listado de todos identificadores de los objetos Patron almacenados.
+	 * @return el texto con el volcado de datos.
+	 */
+	@Override
+	public String listarId() {
+		StringBuilder listado = new StringBuilder();
+		for (Patron patron: datosPatrones) {
+			if (patron != null) {
+				listado.append("\n" + patron.hashCode()); 
+			}
+		}
+		return listado.toString();
+	}
+	
 	/**
 	 * Elimina todos los patrones almacenados y regenera el demo predeterminado.
 	 */
