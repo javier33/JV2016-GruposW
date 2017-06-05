@@ -1,13 +1,13 @@
 /** 
  * Proyecto: Juego de la vida.
- *  Clase-utilidad que adapta el uso de un Calendario para majejo de fches en el programa.
+ *  Clase-utilidad que adapta el uso de un Calendario para manejo de fechas en el programa.
  *  @since: prototipo1.2
  *  @source: Fecha.java 
- *  @version: 2.0 - 2017/03/20
- *  @author: ajp
+ *  @version: 2.1 - 2017/06/1
+ *  @author: JuanC97B
  */
 
-package modelo;
+package util;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -59,6 +59,10 @@ public class Fecha implements Serializable {
 	
 	public int getSegundo() {
 		return calendario.get(Calendar.SECOND);
+	}
+	
+	public Calendar getCalendar(){
+		return this.calendario;
 	}
 	
 	public void setAño(int año) {
@@ -221,6 +225,40 @@ public class Fecha implements Serializable {
 	
 	public int compareTo(Fecha fecha) {
 		return calendario.compareTo(fecha.calendario);
+	}
+	
+	/**
+	 * Método que compara dos fechas
+	 * @param fecha
+	 * @return -1 si la fecha del objeto es menor que la fecha que le envías,
+	 *  0 si son iguales, 1 si la del objeto es mayor y -2 si no se cumplen los if
+	 */
+	public int compare(Fecha fecha){
+		
+		long fecha1 = calendario.getTimeInMillis();
+		long fecha2 = fecha.getCalendar().getTimeInMillis();
+		
+		if (fecha1 < fecha2){
+			return -1;
+		}
+		else if (fecha1 == fecha2){
+			return 0;
+		}
+		else if (fecha1 > fecha2){
+			return 1;
+		}
+		
+		return -2;
+	}
+	
+	
+	/**
+	 * Obtiene texto de 14 caracteres normalizado de la marca de tiempo con precisión de segundo.
+	 * @return el texto formateado compacto.  
+	 */
+	public String toTexto() {
+		return String.format(
+				"%4d%02d%02d%02d%02d%02d", getAño(), getMes(), getDia(), getHora(), getMinuto(), getSegundo());		
 	}
 	
 	@Override
