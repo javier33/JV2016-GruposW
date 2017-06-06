@@ -7,7 +7,7 @@
  *  @author: ajp
  */
 
-package accesoUsr.control;
+package accesoUsr.consola.control;
 
 import accesoDatos.Datos;
 import accesoUsr.consola.VistaSimulacion;
@@ -17,7 +17,7 @@ import modelo.Simulacion;
 public class ControlSimulacion {
 	Datos datos = new Datos();
 	final int CICLOS = 120;
-	VistaSimulacion vista;
+	VistaSimulacion vistaSimulacion;
 	Simulacion simulacion;
 	Mundo mundo;
 	
@@ -28,9 +28,9 @@ public class ControlSimulacion {
 	
 	private void initControlSimulacion() {	
 		mundo = simulacion.getMundo();	
-		vista = new VistaSimulacion();
+		vistaSimulacion = new VistaSimulacion();
 		arrancarSimulacion();
-		vista.confirmar();
+		vistaSimulacion.confirmar();
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class ControlSimulacion {
 	public void arrancarSimulacion() {
 		int gen = 0; 		//Generaciones
 		do {
-			vista.mostrarMensaje("\nGeneración: " + gen);
-			vista.mostrarMundo(this);
+			vistaSimulacion.mostrarMensaje("\nGeneración: " + gen);
+			vistaSimulacion.mostrarSimulacion(this);
 			mundo.actualizarMundo();
 			gen++;
 		}

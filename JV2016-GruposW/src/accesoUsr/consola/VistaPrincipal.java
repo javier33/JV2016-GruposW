@@ -38,7 +38,7 @@ public class VistaPrincipal implements OperacionesVista {
 						"  \nMUNDOS\n" +
 						"    7. Crear nuevo mundo\n" +
 						"    8. Modificar mundo existente\n" +
-						"    9. Eliminar mundo esistente\n" +
+						"    9. Eliminar mundo existente\n" +
 						"    10. Mostrar datos de mundos\n" +
 						"  \nUSUARIOS\n" +
 						"    11. Crear nuevo usuario\n" +

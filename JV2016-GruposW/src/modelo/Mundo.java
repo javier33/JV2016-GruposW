@@ -58,7 +58,7 @@ public class Mundo implements Leyes, Serializable, Cloneable {
 	 * @throws ModeloException 
 	 */
 	public Mundo() throws ModeloException {
-		this("MundoDefecto", new ArrayList<Integer>(), new Hashtable<Patron, Posicion>(), 
+		this(Configuracion.get().getProperty("mundo.demo"), new ArrayList<Integer>(), new Hashtable<Patron, Posicion>(), 
 				new byte[sizePredeterminado][sizePredeterminado]);
 	}
 
@@ -132,7 +132,13 @@ public class Mundo implements Leyes, Serializable, Cloneable {
 	 */
 	private boolean constantesValidas(List<Integer> constantes) {
 		assert constantes != null;
-		return constantes.isEmpty();
+		if (constantes.isEmpty()) {
+			// (23/3) "Juego de la Vida de Conway" ==2 | ==3 permanece viva;  ==3 nace
+			constantes.add(2);
+			constantes.add(3);
+			constantes.add(3);
+		}
+		return true;
 	}
 
 	public void setDistribucion(Map<Patron, Posicion> distribucion) throws ModeloException {
@@ -203,14 +209,14 @@ public class Mundo implements Leyes, Serializable, Cloneable {
 				} 
 				catch (java.lang.ArrayIndexOutOfBoundsException e) { } 
 
-				if (vecinas < 2) {
-					nuevaRealidad[i][j] = 0; 				// subpoblación, muere
+				if (vecinas < constantes.get(0)) {
+					nuevaRealidad[i][j] = 0; 				// 2, subpoblación, muere
 				}
-				if (vecinas > 3) {
-					nuevaRealidad[i][j] = 0; 				// sobrepoblación, muere
+				if (vecinas > constantes.get(1)) {
+					nuevaRealidad[i][j] = 0; 				// 3, sobrepoblación, muere
 				}
-				if (vecinas == 3) {
-					nuevaRealidad[i][j] = 1; 				// pasa a estar viva o se mantiene
+				if (vecinas == constantes.get(constantes.size() - 1)) {
+					nuevaRealidad[i][j] = 1; 				// 3, pasa a estar viva o se mantiene
 				}
 				if (vecinas == 2 && espacio[i][j] == 1) {						
 					nuevaRealidad[i][j] = 1; 				// se mantiene viva

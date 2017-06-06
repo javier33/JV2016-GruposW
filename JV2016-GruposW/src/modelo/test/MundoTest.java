@@ -1,8 +1,8 @@
 /** 
  * Proyecto: Juego de la vida.
- * Clase JUnit de prueba automatizada de las características de la clase Nif según el modelo 2.
+ * Clase JUnit de prueba automatizada de las características de la clase Mundo según el modelo 2.
  * @since: prototipo2
- * @source: TestNif.java 
+ * @source: MundoTest.java 
  * @version: 2.1 - 2017.04.25
  * @author: ajp
  */
@@ -40,15 +40,12 @@ public class MundoTest {
 	public void iniciarlizarDatosPrueba() {	
 		try {
 			this.mundo1 = new Mundo();
-			ArrayList<Integer> lista = new ArrayList<Integer>();
-			lista.add(5);
-			lista.add(6);
-			lista.add(3);
-			lista.add(9);
-			Map<Patron, Posicion> ht = new Hashtable<Patron, Posicion>();
-			ht.put(new Patron(), new Posicion());
-			ht.put(new Patron(), new Posicion());
-			this.mundo2 = new Mundo("Mundo2", lista, ht, new byte[5][3]);
+			ArrayList<Integer> constantesMundo = new ArrayList<Integer>();
+			Map<Patron, Posicion> distribucionPatrones = new Hashtable<Patron, Posicion>();
+			distribucionPatrones.put(new Patron(), new Posicion());
+			distribucionPatrones.put(new Patron(), new Posicion());
+			byte[][] espacio = new byte[100][100];
+			this.mundo2 = new Mundo("Mundo2", constantesMundo, distribucionPatrones, espacio);
 		} 
 		catch (ModeloException e) {	}
 	}
@@ -68,7 +65,7 @@ public class MundoTest {
 	}
 	
 	@Test
-	public void testMundoCopia(){
+	public void testMundoMundo(){
 		
 		Mundo mundoCopia = null;
 		try {
@@ -82,7 +79,7 @@ public class MundoTest {
 	}
 	
 	@Test
-	public void testMundoDefecto(){
+	public void testMundo(){
 		
 		Mundo mundoPrueba = null;
 		try {
@@ -204,60 +201,6 @@ public class MundoTest {
 		} catch (AssertionError | ModeloException e) {
 			assertTrue(true);
 		}
-	}
-	
-	@Test
-	public void testGetNombre(){
-		
-		String p = "Nombre1";
-		
-		try {
-			mundo1.setNombre(p);
-		} catch (ModeloException e) {
-			e.printStackTrace();
-		}
-		assertSame(mundo1.getNombre(), p);
-	}
-	
-	@Test
-	public void testGetConstantes(){
-		
-		List<Integer> ls = new ArrayList<Integer>();
-		
-		try {
-			mundo1.setConstantes(ls);
-		} catch (ModeloException e) {
-			e.printStackTrace();
-		}
-		assertSame(mundo1.getConstantes(), ls);
-	}
-	
-	@Test
-	public void testGetDistribucion() {
-
-		Map<Patron, Posicion> mp = new Hashtable<Patron, Posicion>();
-
-		try {
-			mp.put(new Patron("Prueba1", new byte[][] { { 1, 0 }, { 0, 1 } }), new Posicion(0, 0));
-			mundo1.setDistribucion(mp);
-		} catch (ModeloException e) {
-			e.printStackTrace();
-		}
-		assertSame(mundo1.getDistribucion(), mp);
-	}
-	
-	@Test
-	public void testGetEspacio(){
-		
-		byte[][] b = new byte[1][1];
-		
-		try {
-			mundo1.setEspacio(b);
-		} catch (ModeloException e) {
-			e.printStackTrace();
-		}
-		
-		assertSame(mundo1.getEspacio(), b);
 	}
 	
 	@Test

@@ -34,6 +34,7 @@ public class SimulacionTest {
 	private Fecha fecha;
 	private Mundo mundo;
 
+
 	public SimulacionTest() {
 		try {
 			usr = new Usuario(new Nif("00000001R"), "Luis", "Pérez Ruiz",
@@ -74,7 +75,7 @@ public class SimulacionTest {
 	}
 
 	@Test
-	public void testSimulacionDefecto() {
+	public void testSimulacion() {
 		try {
 			assertEquals(simulacion1.getUsr(), new Usuario());
 			assertEquals(simulacion1.getFecha(), new Fecha());
@@ -85,36 +86,11 @@ public class SimulacionTest {
 	}
 
 	@Test
-	public void testSimulacionCopia() {
+	public void testSimulacionSimulacion() {
 		try {
 			assertEquals(simulacion2, new Simulacion(simulacion2));
 		} 
 		catch (ModeloException e) {	}
-	}
-
-	@Test
-	public void testGetUsr() {
-		assertEquals(simulacion2.getUsr(), usr);
-	}
-
-	@Test
-	public void testGetMundo() {
-		assertEquals(simulacion2.getMundo(), mundo);
-	}
-
-	@Test
-	public void testGetFecha() {
-		assertEquals(simulacion2.getFecha(), fecha);
-	}
-
-	@Test
-	public void testGetEstado() {
-		assertEquals(simulacion2.getEstado(), EstadoSimulacion.PREPARADA);
-	}
-
-	@Test
-	public void testGetIdSimulacion() {
-		assertEquals(simulacion2.getIdSimulacion(), "LPR1R:20170512103502");
 	}
 
 	@Test
@@ -160,11 +136,6 @@ public class SimulacionTest {
 	@Test
 	public void testClone() {
 		assertEquals(simulacion2, simulacion2.clone());
-	}
-
-	@Test
-	public void testHashCode() {
-		assertEquals(simulacion2.hashCode(), 1316541442);
 	}
 
 } // class

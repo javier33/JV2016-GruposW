@@ -1,4 +1,3 @@
-
 /** Proyecto: Juego de la vida.
  *  Prueba Junit4 de la clase Correo según el modelo 2.1
  *  @since: prototipo2.0
@@ -18,6 +17,7 @@ import org.junit.Test;
 
 import modelo.Correo;
 import modelo.ModeloException;
+
 
 public class CorreoTest {
 	private Correo correo1;
@@ -55,21 +55,16 @@ public class CorreoTest {
 	}
 
 	@Test
-	public void testCorreoDefecto() {
+	public void testCorreo() {
 		assertEquals(correo1.getTexto(), "correo@correo.com");
 	}
 
 	@Test
-	public void testCorreoCopia() {
+	public void testCorreoCorreo() {
 		try {
 			assertEquals(correo2, new Correo(correo2));
 		} 
 		catch (ModeloException e) {	}
-	}
-
-	@Test
-	public void testGetTexto() {
-		assertEquals(correo2.getTexto(), "correo@correo.com");
 	}
 	
 	@Test

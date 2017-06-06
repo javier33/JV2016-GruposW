@@ -7,28 +7,21 @@
  *  @author: ajp
  */
 
-package accesoUsr.control;
-
-import accesoDatos.DatosException;
-
-import java.awt.List;
-import java.util.ArrayList;
+package accesoUsr.consola.control;
 
 import accesoDatos.Datos;
+import accesoDatos.DatosException;
 import accesoUsr.consola.VistaSesion;
-
 import config.Configuracion;
 import modelo.ClaveAcceso;
 import modelo.ModeloException;
 import modelo.SesionUsuario;
 import modelo.SesionUsuario.EstadoSesion;
-import modelo.Simulacion;
 import modelo.Usuario;
 import util.Fecha;
 
 public class ControlSesion {
-  
-	private VistaSesion vista;
+	private VistaSesion vistaSesion;
 	private Usuario usrSesion;
 	private SesionUsuario sesion;
 	private Datos fachada;
@@ -43,8 +36,8 @@ public class ControlSesion {
 
 	private void initControlSesion(String idUsr) {
 		fachada = new Datos();
-		vista = new VistaSesion();
-		vista.mostrarMensaje("JV-2016");
+		vistaSesion = new VistaSesion();
+		vistaSesion.mostrarMensaje("JV-2016");
 		iniciarSesionUsuario(idUsr);
 	}
 
@@ -59,16 +52,16 @@ public class ControlSesion {
 		do {
 			if (idUsr == null) {
 				// Pide credencial usuario si llega null.
-				credencialUsr = vista.pedirIdUsr();	
+				credencialUsr = vistaSesion.pedirIdUsr();	
 			}
 			else {
-				vista.mostrarMensaje(credencialUsr);
+				vistaSesion.mostrarMensaje(credencialUsr);
 			}	
 			credencialUsr = credencialUsr.toUpperCase();
-			String clave = vista.pedirClaveAcceso();
+			String clave = vistaSesion.pedirClaveAcceso();
 
 			// Busca usuario coincidente con credencial.
-			vista.mostrarMensaje(credencialUsr);
+			vistaSesion.mostrarMensaje(credencialUsr);
 			usrSesion = fachada.obtenerUsuario(credencialUsr);
 			if ( usrSesion != null) {			
 				try {
@@ -81,14 +74,14 @@ public class ControlSesion {
 					e.printStackTrace();
 				}
 				intentos--;
-				vista.mostrarMensaje("Credenciales incorrectas...");
-				vista.mostrarMensaje("Quedan " + intentos + " intentos... ");
+				vistaSesion.mostrarMensaje("Credenciales incorrectas...");
+				vistaSesion.mostrarMensaje("Quedan " + intentos + " intentos... ");
 			}
 		}
 		while (intentos > 0);
 	
-		if (intentos <= 0) {
-			vista.mostrarMensaje("Fin del programa...");
+		if (intentos <= 0){
+			vistaSesion.mostrarMensaje("Fin del programa...");
 			fachada.cerrar();
 			System.exit(0);	
 		}
@@ -97,7 +90,7 @@ public class ControlSesion {
 	public SesionUsuario getSesion() {
 		return sesion;
 	}
-  
+	
 	/**
 	 * Crea la sesion de usuario 
 	 */
@@ -106,16 +99,13 @@ public class ControlSesion {
 		// Crea la sesión de usuario en el sistema.
 		try {
 			sesion = new SesionUsuario(usrSesion, new Fecha(), EstadoSesion.ACTIVA);
-		} 
-		catch (ModeloException e1) {
-			e1.printStackTrace();
-		}
-		try {
 			fachada.altaSesion(sesion);
-		} catch (DatosException e) {
+			
+		} 
+		catch (DatosException | ModeloException e) {
 			e.printStackTrace();
 		}	
-		vista.mostrarMensaje("Sesión: " + sesion.getIdSesion()
+		vistaSesion.mostrarMensaje("Sesión: " + sesion.getIdSesion()
 		+ '\n' + "Iniciada por: " + usrSesion.getNombre());	
 	}
 

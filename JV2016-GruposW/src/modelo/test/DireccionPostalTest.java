@@ -58,7 +58,7 @@ public class DireccionPostalTest {
 	}
 
 	@Test
-	public void testDireccionPostalDefecto() {
+	public void testDireccionPostal() {
 		assertEquals(direccion1.getCalle(), "Calle");
 		assertEquals(direccion1.getNumero(), "00");
 		assertEquals(direccion1.getCP(), "99999");
@@ -66,32 +66,14 @@ public class DireccionPostalTest {
 	}
 
 	@Test
-	public void testDireccionPostalCopia() {
+	public void testDireccionPostalDireccionPostal() {
 		try {
 			assertEquals(direccion2, new DireccionPostal(direccion2));
 		} 
 		catch (ModeloException e) {	}
 	}
 	
-	@Test
-	public void testGetCalle() {
-		assertEquals(direccion2.getCalle(), "Flan");
-	}
 
-	@Test
-	public void testGetNumero() {
-		assertEquals(direccion2.getNumero(), "21");
-	}
-
-	@Test
-	public void testGetCodigoPostal() {
-		assertEquals(direccion2.getCP(), "88888");
-	}
-	
-	@Test
-	public void testGetPoblacion() {
-		assertEquals(direccion2.getPoblacion(), "Murcia");
-	}
 	
 	@Test
 	public void testSetCalle() {

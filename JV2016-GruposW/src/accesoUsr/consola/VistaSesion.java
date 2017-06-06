@@ -16,7 +16,7 @@ import java.util.Scanner;
 import accesoUsr.OperacionesVista;
 import accesoUsr.OperacionesVistaSesion;
 
-public class VistaSesion implements OperacionesVista, OperacionesVistaSesion {
+public class VistaSesion implements OperacionesVistaSesion {
 	
 	private Console consola;
 	

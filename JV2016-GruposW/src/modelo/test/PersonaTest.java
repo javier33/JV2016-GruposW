@@ -70,7 +70,7 @@ public class PersonaTest {
 	}
 
 	@Test
-	public void testPersonaDefecto() {
+	public void testPersona() {
 		try {
 			assertEquals(persona1.getNif(), new Nif("00000000T"));
 			assertEquals(persona1.getNombre(), "Nombre");
@@ -95,31 +95,6 @@ public class PersonaTest {
 		assertEquals(persona2.getNombre(), "Luis");
 	}
 
-	@Test
-	public void testGetApellidos() {
-		assertEquals(persona2.getApellidos(), "Pérez Ruiz");
-	}
-
-	@Test
-	public void testGetDomicilio() {
-		try {
-			assertEquals(persona2.getDomicilio(), new DireccionPostal("Roncal", "10", "30130", "Murcia"));
-		} 
-		catch (ModeloException e) { }
-	}
-
-	@Test
-	public void testGetFechaNacimiento() {
-		assertEquals(persona2.getFechaNacimiento(), new Fecha(2000, 03, 21));
-	}
-
-	@Test
-	public void testGetCorreo() {
-		try {
-			assertEquals(persona2.getCorreo(), new Correo("luis@gmail.com"));
-		} 
-		catch (ModeloException e) { }
-	}
 
 	@Test
 	public void testSetNif() {

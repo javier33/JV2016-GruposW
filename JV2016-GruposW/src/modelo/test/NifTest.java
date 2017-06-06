@@ -53,21 +53,16 @@ public class NifTest {
 	}
 
 	@Test
-	public void testNifDefecto() {
+	public void testNif() {
 		assertEquals(nif1.getTexto(), "00000000T");
 	}
 
 	@Test
-	public void testNifCopia() {
+	public void testNifNif() {
 		try {
 			assertEquals(nif2, new Nif(nif2));
 		} 
 		catch (ModeloException e) {	}
-	}
-
-	@Test
-	public void testGetTexto() {
-		assertEquals(nif2.getTexto(), "00000001R");
 	}
 
 	@Test

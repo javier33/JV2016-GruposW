@@ -7,7 +7,7 @@
  *  @author: ajp
  */
 
-package accesoUsr.control;
+package accesoUsr.consola.control;
 
 import java.util.ArrayList;
 
@@ -18,7 +18,7 @@ import modelo.Simulacion;
 
 public class ControlPrincipal {
 
-	private VistaPrincipal vistaMenu;
+	private VistaPrincipal vistaPrincipal;
 	private SesionUsuario sesionUsr;
 	private Datos fachada;
 
@@ -32,22 +32,22 @@ public class ControlPrincipal {
 
 	private void initMenuPrincipal(String idUsr) {
 		fachada = new Datos();
-		vistaMenu = new VistaPrincipal();
+		vistaPrincipal = new VistaPrincipal();
 		this.sesionUsr = new ControlSesion(idUsr).getSesion();
 		secuenciaPrincipal();
 	}
 
 	private void secuenciaPrincipal() {
 		do {
-			vistaMenu.mostrar();
-			vistaMenu.pedirOpcion();
+			vistaPrincipal.mostrar();
+			vistaPrincipal.pedirOpcion();
 			procesarOpcion();	
 		} while (true);
 		
 	}
 
 	private void procesarOpcion() {
-		switch (vistaMenu.getOpcionActiva()) {
+		switch (vistaPrincipal.getOpcionActiva()) {
 		case 0:
 			salir();
 		
@@ -113,110 +113,110 @@ public class ControlPrincipal {
 			mostrarIdSesiones();
 			break;
 		default:
-			vistaMenu.mostrarMensaje("Opción incorrecta...");
+			vistaPrincipal.mostrarMensaje("Opción incorrecta...");
 			break;
 		}	
 	}
 
 	private void salir() {
 		fachada.cerrar();
-		vistaMenu.mostrarMensaje("\nFin de programa...");	
+		vistaPrincipal.mostrarMensaje("\nFin de programa...");	
 		System.exit(1); 
 	}	
 	
 	// Simulaciones
 	private void crearNuevaSimulacion() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 	
 	private void modificarSimulacion() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 	
 	private void eliminarSimulacion() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 	
 	private void mostrarSimulaciones() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 	
 	private void mostrarIdSimulaciones() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 
 	private void ejecutarDemoSimulacion() {
 		ArrayList<Simulacion> simulacionesUsrActivo 
-		= new ArrayList<Simulacion>(fachada.obtenerSimulacionesUsuario(sesionUsr.getUsr().getIdUsr()));
+		= new ArrayList<Simulacion>(fachada.obtenerSimulacionesUsuario("III1R"));
 		// La simulación predeterminada-demo es la primera del usuario predeterminado Invitado
 		new ControlSimulacion(simulacionesUsrActivo.get(0));		
 	}
 	
 	// Mundos
 	private void crearNuevoMundo() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 
 	private void modificarMundo() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 	
 	private void eliminarMundo() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 	
 	private void mostrarMundos() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 	
 	// Usuarios	
 	private void crearNuevoUsuario() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 	
 	private void modificarUsuario() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 	
 	private void eliminarUsuario() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 	
 	private void mostrarUsuarios() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 	
 	// Sesiones	
 	private void modificarSesion() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 	
 	private void eliminarSesion() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 	
 	private void mostrarSesiones() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 	
 	private void mostrarIdSesiones() {
-		vistaMenu.mostrarMensaje("Opción no disponible...");
+		vistaPrincipal.mostrarMensaje("Opción no disponible...");
 		
 	}
 

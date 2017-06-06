@@ -25,6 +25,7 @@ public class ClaveAccesoTest {
 	private ClaveAcceso clave1;
 	private ClaveAcceso clave2 ;
 	
+	
 	@Before
 	public void iniciarlizarDatosPrueba() {	
 		try {
@@ -46,22 +47,17 @@ public class ClaveAccesoTest {
 	}
 
 	@Test
-	public void testClaveAccesoDefecto() {
+	public void testClaveAcceso() {
 		assertEquals(clave1.getTexto(), Criptografia.cesar("Miau#0"));
 	}
 
 	@Test
-	public void testClaveAccesoCopia() {
+	public void testClaveAccesoClaveAcceso() {
 		try {
 			assertEquals(clave2, new ClaveAcceso(clave2));
 		} 
 		catch (ModeloException e) {	}
 		
-	}
-
-	@Test
-	public void testGetTexto() {
-		assertEquals(clave2.getTexto(), Criptografia.cesar("Miau#2"));
 	}
 
 	@Test

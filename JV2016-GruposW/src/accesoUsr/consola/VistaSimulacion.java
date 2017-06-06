@@ -14,7 +14,7 @@ import java.io.Console;
 import java.util.Scanner;
 
 import accesoUsr.OperacionesVista;
-import accesoUsr.control.ControlSimulacion;
+import accesoUsr.consola.control.ControlSimulacion;
 
 public class VistaSimulacion implements OperacionesVista {
 	// Atributos
@@ -29,23 +29,14 @@ public class VistaSimulacion implements OperacionesVista {
 	 * Despliega en la consola el estado almacenado correspondiente
 	 * a una generación del Juego de la vida.
 	 */
-	public void mostrarMundo(ControlSimulacion control) {
-		byte[][] espacio = control.getMundo().getEspacio();
+	public void mostrarSimulacion(ControlSimulacion controlSimulacion) {
+		byte[][] espacio = controlSimulacion.getMundo().getEspacio();
 		for (int i = 0; i < espacio.length; i++) {
 			for (int j = 0; j < espacio.length; j++) {
 				this.mostrarSimple((espacio[i][j] == 1) ? "|o" : "| ");
 			}
 			this.mostrarMensaje("|");
 		}
-	}
-	
-	@Override
-	public void mostrarMensaje(String mensaje) {
-		if (consola != null) {
-			consola.writer().println(mensaje);
-			return;
-		}
-		System.out.println(mensaje);
 	}
 
 	private void mostrarSimple(String mensaje) {
@@ -65,5 +56,11 @@ public class VistaSimulacion implements OperacionesVista {
 		}
 		// Desde entorno Eclipse la consola falla.
 		new Scanner(System.in).nextLine();
+	}
+
+	@Override
+	public void mostrarMensaje(String mensaje) {
+		// TODO Auto-generated method stub
+		
 	}
 }

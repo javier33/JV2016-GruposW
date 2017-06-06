@@ -58,16 +58,6 @@ public class UsuarioTest {
 	
 	// Test CON DATOS VALIDOS
 	@Test
-	public void testGetClaveAcceso() {
-		assertNotNull(((Usuario)usuario2).getClaveAcceso());
-	}
-	
-	@Test
-	public void testGetRol() {
-		assertNotNull(((Usuario)usuario2).getRol());
-	}
-		
-	@Test
 	public void testSetFechaAlta() {
 		try {
 			usuario1.setFechaAlta(new Fecha(2012, 2, 9));
