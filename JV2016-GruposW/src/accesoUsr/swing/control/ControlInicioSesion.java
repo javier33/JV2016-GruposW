@@ -2,7 +2,7 @@
  *  Resuelve todos los aspectos relacionados con el control 
  *  de inicio de sesión de usuario. Colabora en el patron MVC
  *  @since: prototipo2.1
- *  @source: ControlSesion.java 
+ *  @source: ControlInicioSesion.java 
  *  @version: 2.2 - 2017.05.25
  *  @author: ajp
  */

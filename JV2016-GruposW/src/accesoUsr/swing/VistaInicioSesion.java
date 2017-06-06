@@ -3,7 +3,7 @@
  *  del inicio de sesión de usuario. 
  *  Colabora en el patron MVC
  *  @since: prototipo2.1
- *  @source: VistaSesionTexto.java 
+ *  @source: VistaInicioSesion.java 
  *  @version: 2.1 - 2017.05.16
  *  @author: ajp
  */
@@ -26,8 +26,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import accesoUsr.OperacionesVista;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 @SuppressWarnings("serial")
 public class VistaInicioSesion extends JDialog
