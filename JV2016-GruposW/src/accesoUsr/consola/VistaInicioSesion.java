@@ -3,7 +3,7 @@
  *  del inicio de sesión de usuario. 
  *  Colabora en el patron MVC
  *  @since: prototipo2.1
- *  @source: VistaSesionTexto.java 
+ *  @source: VistaInicioSesion.java 
  *  @version: 2.1 - 2017.05.16
  *  @author: ajp
  */
@@ -13,14 +13,13 @@ package accesoUsr.consola;
 import java.io.Console;
 import java.util.Scanner;
 
-import accesoUsr.OperacionesVista;
 import accesoUsr.OperacionesVistaSesion;
 
-public class VistaSesion implements OperacionesVistaSesion {
+public class VistaInicioSesion implements OperacionesVistaSesion {
 	
 	private Console consola;
 	
-	public VistaSesion() {
+	public VistaInicioSesion() {
 		consola = System.console();
 	}
 	

@@ -2,7 +2,7 @@
  *  Resuelve todos los aspectos relacionados con el control 
  *  de inicio de sesión de usuario. Colabora en el patron MVC
  *  @since: prototipo2.1
- *  @source: ControlSesion.java 
+ *  @source: ControlInicioSesion.java 
  *  @version: 2.1 - 2017.05.08
  *  @author: ajp
  */
@@ -11,7 +11,7 @@ package accesoUsr.consola.control;
 
 import accesoDatos.Datos;
 import accesoDatos.DatosException;
-import accesoUsr.consola.VistaSesion;
+import accesoUsr.consola.VistaInicioSesion;
 import config.Configuracion;
 import modelo.ClaveAcceso;
 import modelo.ModeloException;
@@ -20,23 +20,23 @@ import modelo.SesionUsuario.EstadoSesion;
 import modelo.Usuario;
 import util.Fecha;
 
-public class ControlSesion {
-	private VistaSesion vistaSesion;
+public class ControlInicioSesion {
+	private VistaInicioSesion vistaSesion;
 	private Usuario usrSesion;
 	private SesionUsuario sesion;
 	private Datos fachada;
 
-	public ControlSesion() {
+	public ControlInicioSesion() {
 		this(null);
 	}
 
-	public ControlSesion(String idUsr) {
+	public ControlInicioSesion(String idUsr) {
 		initControlSesion(idUsr);
 	}
 
 	private void initControlSesion(String idUsr) {
 		fachada = new Datos();
-		vistaSesion = new VistaSesion();
+		vistaSesion = new VistaInicioSesion();
 		vistaSesion.mostrarMensaje("JV-2016");
 		iniciarSesionUsuario(idUsr);
 	}

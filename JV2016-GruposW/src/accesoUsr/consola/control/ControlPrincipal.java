@@ -33,7 +33,7 @@ public class ControlPrincipal {
 	private void initMenuPrincipal(String idUsr) {
 		fachada = new Datos();
 		vistaPrincipal = new VistaPrincipal();
-		this.sesionUsr = new ControlSesion(idUsr).getSesion();
+		this.sesionUsr = new ControlInicioSesion(idUsr).getSesion();
 		secuenciaPrincipal();
 	}
 
