@@ -43,6 +43,14 @@ public class ClaveAcceso implements Serializable, Cloneable {
 		throw new ModeloException("El formato de la contraseña no es válido...");
 	}
 
+	public void setTextoEncritado(String textoEncriptado) throws ModeloException {
+		if (ClaveAccesoValida(texto)) {
+			this.texto = textoEncriptado;
+			return;
+		}
+		throw new ModeloException("El formato de la contraseña no es válido...");
+	}
+
 	private boolean ClaveAccesoValida(String texto) {
 		assert texto != null;
 		return	texto.matches(Formato.PATRON_CONTRASEÑA);
